@@ -1,0 +1,4 @@
+; $Id $
+name = "Auto Assign Role"
+description = "Designate a role to assign all new users to."
+version = "$Name$"
