@@ -9,9 +9,9 @@ function autoassignrole_menu($may_cache) {
   $items = array();
   if ($may_cache) {
     $items[] = array(
-    'path' => 'admin/settings/autoassignrole',
-    'title' => t('Auto Assign Role Settings'),
-    'description' => t('Auto Assign Role Settings page.'),
+    'path' => 'admin/user/autoassignrole',
+    'title' => t('Auto assign role'),
+    'description' => t('Auto Assign Role Settings.'),
     'callback' => 'drupal_get_form',
     'callback arguments' => 'autoassignrole_settings',
     'access' => user_access('administer autoassignrole'),
@@ -27,12 +27,11 @@ function autoassignrole_settings() {
   '#collapsed' => FALSE,
   );
   $form['autoassignrole_settings']['AUTOASSIGNROLE_ROLE'] = array(
-  '#type' => 'textfield',
-  '#title' => t('.'),
-  '#default_value' => variable_get('AUTOASSIGNROLE_ROLE', ''),
-  '#size' => 70,
-  '#maxlength' => 255,
-  '#description' => t('The role you want new users assigned to.')
+    '#type' => 'select',
+    '#title' => t('Role'),
+    '#default_value' => variable_get('AUTOASSIGNROLE_ROLE',''),
+    '#options' => user_roles(),
+    '#description' => t('Select the role to assign new users.'),
   );
   return system_settings_form($form);
 }
@@ -50,9 +49,14 @@ function autoassignrole_perm() {
 function autoassignrole_user($type, &$edit, &$user, $category = NULL) {
   switch ($type) {
     case 'insert':
-      $sql = "SELECT r.rid FROM {role} r WHERE r.name = '%s'";
-      $role = db_fetch_object(db_query($sql,variable_get('AUTOASSIGNROLE_ROLE','')));
-      db_query('INSERT INTO {users_roles} (uid, rid) values (%d, %d)', $user->uid, $role->rid );
+    case 'login':
+      //Only assign the role if this is the first time the user has logged in.      
+      if($user->login == 0 && variable_get('AUTOASSIGNROLE_ROLE','') != '') {
+        db_query('INSERT INTO {users_roles} (uid, rid) values (%d, %d)', 
+          $user->uid, 
+          variable_get('AUTOASSIGNROLE_ROLE','') 
+        );
+      }
       break;
   }
 }
