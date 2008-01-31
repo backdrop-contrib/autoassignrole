@@ -4,4 +4,10 @@
  */
 function autoassignrole_uninstall() {
   variable_del('AUTOASSIGNROLE_ROLE');
+  variable_del('AUTOASSIGNROLE_ROLE_ACTIVE');
+  variable_del('AUTOASSIGNROLE_ROLE_USER_ACTIVE');
+  variable_del('AUTOASSIGNROLE_ROLE_USER');
+  variable_del('AUTOASSIGNROLE_ROLE_USER_MULTIPLE');
+  variable_del('AUTOASSIGNROLE_ROLE_USER_DESCRIPTION');
+  variable_del('AUTOASSIGNROLE_ROLE_USER_TITLE');  
 }
