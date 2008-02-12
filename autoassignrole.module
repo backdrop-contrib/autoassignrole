@@ -6,6 +6,7 @@ define("AUTOASSIGNROLE_ROLE_USER", "");
 define("AUTOASSIGNROLE_ROLE_USER_MULTIPLE", 0);
 define("AUTOASSIGNROLE_ROLE_USER_DESCRIPTION", "");
 define("AUTOASSIGNROLE_ROLE_USER_TITLE", t("Role"));
+define("AUTOASSIGNROLE_ROLE_SORT", "SORT_ASC");
 
 /**
  * Implementation of hook_menu().
@@ -79,6 +80,13 @@ function autoassignrole_settings() {
     '#title' => t('Required'),
     '#description' => t('Should the end user be required to choose a role?'),
     '#default_value' => variable_get('AUTOASSIGNROLE_ROLE_USER_REQUIRED',0),
+  );
+  $form['autoassignrole_settings_user']['AUTOASSIGNROLE_ROLE_SORT'] = array(
+    '#type' => 'select',
+    '#title' => t('Sorting'),
+    '#description' => t('Default sort order of roles the user will see.'),
+    '#default_value' => variable_get('AUTOASSIGNROLE_ROLE_SORT','SORT_ASC'),
+    '#options' => array('SORT_ASC' => t('Ascending'), 'SORT_DESC' => t('Descending')),
   );
   $form['autoassignrole_settings_user']['AUTOASSIGNROLE_ROLE_USER_FIELDSET'] = array(
     '#type' => 'textfield',
@@ -194,6 +202,11 @@ function _autoassignrole_intersect() {
     }
   }
   $result = _autoassignrole_array_intersect_key(user_roles(), $autoassignrole_roles);
+  if(variable_get("AUTOASSIGNROLE_ROLE_SORT", "SORT_ASC") == "SORT_ASC") {
+    array_multisort($result,SORT_ASC);
+  } else {
+  	array_multisort($result,SORT_DESC);
+  }
   return $result;
 }
 function _autoassignrole_array_intersect_key($isec, $keys) {

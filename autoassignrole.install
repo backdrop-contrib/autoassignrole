@@ -3,13 +3,8 @@
  * Implementation of hook_uninstall().
  */
 function autoassignrole_uninstall() {
-  variable_del('AUTOASSIGNROLE_ROLE');
-  variable_del('AUTOASSIGNROLE_ROLE_ACTIVE');
-  variable_del('AUTOASSIGNROLE_ROLE_USER_ACTIVE');
-  variable_del('AUTOASSIGNROLE_ROLE_USER');
-  variable_del('AUTOASSIGNROLE_ROLE_USER_MULTIPLE');
-  variable_del('AUTOASSIGNROLE_ROLE_USER_DESCRIPTION');
-  variable_del('AUTOASSIGNROLE_ROLE_USER_TITLE');
-  variable_del('AUTOASSIGNROLE_ROLE_USER_REQUIRED');
-  variable_del('AUTOASSIGNROLE_ROLE_USER_FIELDSET');
+	$vars = db_query("select name from variable where name like 'AUTOASSIGNROLE_%%'");
+	while ($var = db_fetch_object($vars)) {
+		variable_del($var->name);
+	}
 }
