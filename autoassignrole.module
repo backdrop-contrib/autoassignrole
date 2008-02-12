@@ -1,4 +1,5 @@
 <?php
+// $Id$
 define("AUTOASSIGNROLE_ROLE", "");
 define("AUTOASSIGNROLE_ROLE_ACTIVE", 0);
 define("AUTOASSIGNROLE_ROLE_USER_ACTIVE", 0);
