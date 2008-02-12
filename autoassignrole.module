@@ -74,11 +74,17 @@ function autoassignrole_settings() {
     '#default_value' => variable_get('AUTOASSIGNROLE_ROLE_USER_MULTIPLE',0),
     '#options' => array(0 => t('Single Role'), 1 => t('Multiple Roles')),
   );
-  $form['autoassignrole_settings_user']['AUTOASSIGNROLE_ROLE_USER_TITLE'] = array(
+  $form['autoassignrole_settings_user']['AUTOASSIGNROLE_ROLE_USER_REQUIRED'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Required'),
+    '#description' => t('Should the end user be required to choose a role?'),
+    '#default_value' => variable_get('AUTOASSIGNROLE_ROLE_USER_REQUIRED',0),
+  );
+  $form['autoassignrole_settings_user']['AUTOASSIGNROLE_ROLE_USER_FIELDSET'] = array(
     '#type' => 'textfield',
-    '#title' => t('User Role Title'),
-    '#description' => t('Should the end user be allowed to choose a single role or can they choose multiple roles?'),
-    '#default_value' => variable_get('AUTOASSIGNROLE_ROLE_USER_TITLE',""),
+    '#title' => t('User Role Fieldset Title'),
+    '#description' => t('The title of the fieldset that contains role options.'),
+    '#default_value' => variable_get('AUTOASSIGNROLE_ROLE_USER_FIELDSET', 'User Role Selection'),
     '#size' => 60,
     '#maxlength' => 128, 
     '#required' => FALSE,
@@ -86,7 +92,7 @@ function autoassignrole_settings() {
   $form['autoassignrole_settings_user']['AUTOASSIGNROLE_ROLE_USER_TITLE'] = array(
     '#type' => 'textfield',
     '#title' => t('User Role Title'),
-    '#description' => t('The title of the fieldset that contains the role options the end user sees during registration.'),
+    '#description' => t('The title of the field that contains the role options the end user sees during registration.'),
     '#default_value' => variable_get('AUTOASSIGNROLE_ROLE_USER_TITLE',""),
     '#size' => 60,
     '#maxlength' => 128, 
@@ -146,25 +152,38 @@ function autoassignrole_form_alter($form_id, &$form) {
   if ($form_id == "user_register" && variable_get('AUTOASSIGNROLE_ROLE_USER_ACTIVE','0') == 1) {
     $form['autoassignrole_user'] = array(
     '#type' => 'fieldset',
-    '#title' => t('User Role Selection'),
+    '#title' => variable_get('AUTOASSIGNROLE_ROLE_USER_FIELDSET','User Role Selection'),
     '#collapsible' => FALSE,
     '#collapsed' => FALSE,
     );
     $form['autoassignrole_user']['AUTOASSIGNROLE_ROLE_USER'] = array(
-      '#type' => _autoassignrole_user_input_type(),
+      '#type' => _autoassignrole_user_input('type'),
       '#title' => variable_get('AUTOASSIGNROLE_ROLE_USER_TITLE',""),
       '#options' => _autoassignrole_intersect(),
+      '#required' => _autoassignrole_user_input('required'),
       '#description' => variable_get('AUTOASSIGNROLE_ROLE_USER_DESCRIPTION',""),
     );
   }
 }
-function _autoassignrole_user_input_type() {
-  if(variable_get('AUTOASSIGNROLE_ROLE_USER_MULTIPLE',0) == 0) {
-    $type = 'radios';
-  } else {
-    $type = 'checkboxes';
-  }
-  return $type;
+function _autoassignrole_user_input($args) {
+  switch ($args) {
+    case 'type':
+      if(variable_get('AUTOASSIGNROLE_ROLE_USER_MULTIPLE',0) == 0) {
+        $type = 'radios';
+      } else {
+        $type = 'checkboxes';
+      }
+      return $type;
+      break;
+    case 'required':
+      if(variable_get('AUTOASSIGNROLE_ROLE_USER_REQUIRED',0) == 0) {
+        $required = FALSE;
+      } else {
+        $required = TRUE;
+      }
+      return $required;
+      break;
+  }  
 }
 
 function _autoassignrole_intersect() {
