@@ -1,4 +1,4 @@
 ; $Id$
-name = "Auto Assign Role"
-description = "Designate a role to assign all new users to."
-
+name = Auto Assign Role
+description = Designate a role to assign all new users to.
+core = 6.x
