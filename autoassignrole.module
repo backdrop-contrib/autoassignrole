@@ -77,7 +77,6 @@ function autoassignrole_user($op, &$edit, &$account, $category = NULL) {
           uasort($roles,'_autoassignrole_array_asc');
         }
         else {
-          print_r($roles);
           uasort($roles,'_autoassignrole_array_desc');
         }
         
@@ -91,6 +90,9 @@ function autoassignrole_user($op, &$edit, &$account, $category = NULL) {
           '#options' => $roles,
           '#description' => _autoassignrole_settings('user_description'),
         );
+        if(_autoassignrole_settings('user_required')) {
+          $form['autoassignrole_user']['user_roles']['#required'] = TRUE; 
+        }
         return $form;
       }
     break;
