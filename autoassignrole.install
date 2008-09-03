@@ -45,6 +45,9 @@ function autoassignrole_install() {
   db_query("INSERT into {autoassignrole} (arid,value) VALUES ('%s', '%s')",
     'user_sort', 'SORT_ASC'
   );
+  db_query("INSERT into {autoassignrole} (arid,value) VALUES ('%s', '%s')",
+    'user_selection', 2
+  );
 }
 
 /**

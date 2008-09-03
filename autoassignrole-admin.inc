@@ -99,6 +99,13 @@ function autoassignrole_admin_form() {
       or can they choose multiple roles?'),
     '#options' => array(0 => t('Single Role'), 1 => t('Multiple Roles')),
   );
+  $form['autoassignrole_settings_user']['user_selection'] = array(
+    '#type' => 'radios',
+    '#title' => t('Selection Method'),
+    '#default_value' => _autoassignrole_settings('user_selection'),
+    '#description' => t('The type of form elements the end user will be presented with.'),
+    '#options' => array(0 => t('Radio Buttons'), 1 => t('Selection Box'), 2 => t('Check Boxes')),
+  );
   $form['autoassignrole_settings_user']['user_required'] = array(
     '#type' => 'radios',
     '#title' => t('Required'),
@@ -146,6 +153,16 @@ function autoassignrole_admin_form() {
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save'));
   return $form;
 }
+function autoassignrole_admin_form_validate($form_id, $form_values) {
+  if($form_values['values']['user_multiple'] == 0 &&
+      $form_values['values']['user_selection'] == 2) {
+    form_set_error('user_selection', t('If a user can only select a single role you need to set the selection method as Radio Buttons or Selection Box.'));
+  }
+  if($form_values['values']['user_multiple'] == 1 &&
+      $form_values['values']['user_selection'] == 0) {
+    form_set_error('user_selection', t('If a user can select multiple roles they can not use Radio Buttons as the selection method.'));
+  }
+}
 function autoassignrole_admin_form_submit($form_id, $form_values) {
   db_query("UPDATE {autoassignrole} set value = '%s' where arid = '%s'",
     $form_values['values']['auto_active'], 'auto_active');
@@ -167,4 +184,6 @@ function autoassignrole_admin_form_submit($form_id, $form_values) {
     $form_values['values']['user_sort'], 'user_sort');
   db_query("UPDATE {autoassignrole} set value = '%s' where arid = '%s'",
     $form_values['values']['user_description'], 'user_description');
+  db_query("UPDATE {autoassignrole} set value = '%s' where arid = '%s'",
+    $form_values['values']['user_selection'], 'user_selection');
 }

@@ -83,13 +83,33 @@ function autoassignrole_user($op, &$edit, &$account, $category = NULL) {
         if (!$edit || !array_key_exists('user_roles', $edit)) {
           $edit['user_roles'] = array();
         }
-        $form['autoassignrole_user']['user_roles'] = array(
-          '#type' => 'checkboxes',
-          '#title' => t('Roles'),
-          '#default_value' => $edit['user_roles'],
-          '#options' => $roles,
-          '#description' => _autoassignrole_settings('user_description'),
-        );
+        if (_autoassignrole_settings('user_selection') == 0) {
+          $form['autoassignrole_user']['user_roles'] = array(
+            '#type' => 'radios',
+            '#title' => t(_autoassignrole_settings('user_title')),
+            '#options' => $roles,
+            '#description' => t(_autoassignrole_settings('user_description')),
+          );
+        }
+        if (_autoassignrole_settings('user_selection') == 1) {
+          $roles[''] = '';
+          $form['autoassignrole_user']['user_roles'] = array(
+            '#type' => 'select',
+            '#title' => t(_autoassignrole_settings('user_title')),
+            '#options' => $roles,
+            '#default_value' => '',
+            '#description' => t(_autoassignrole_settings('user_description')),
+          );
+        }
+        if (_autoassignrole_settings('user_selection') == 2) {
+          $form['autoassignrole_user']['user_roles'] = array(
+            '#type' => 'checkboxes',
+            '#title' => t(_autoassignrole_settings('user_title')),
+            '#default_value' => $edit['user_roles'],
+            '#options' => $roles,
+            '#description' => _autoassignrole_settings('user_description'),
+          );
+        }
         if(_autoassignrole_settings('user_required')) {
           $form['autoassignrole_user']['user_roles']['#required'] = TRUE; 
         }
