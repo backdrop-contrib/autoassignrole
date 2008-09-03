@@ -178,7 +178,7 @@ function _autoassignrole_array_intersect_key($isec, $keys) {
     $res = array();
     foreach (array_keys($isec) as $key) {
       if (isset($keys[$key])) {
-        $res[$key] = $isec[$key];
+        $res[$key] = t($isec[$key]);
       }
     }
     return $res;
