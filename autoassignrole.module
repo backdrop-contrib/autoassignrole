@@ -56,6 +56,7 @@ function autoassignrole_user($op, &$edit, &$account, $category = NULL) {
         }
         $edit['roles'] = $roles;
       }
+      $account = user_load(array("uid"=>$account->uid));
     break;
     case 'register':
       if (_autoassignrole_settings('user_active') == 1) {
