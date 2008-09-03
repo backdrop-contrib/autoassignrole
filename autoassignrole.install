@@ -80,4 +80,11 @@ function autoassignrole_schema() {
   );
   return $schema;
 }
-
+function autoassignrole_update_6000() {
+  $sql = "SELECT name FROM {variable} WHERE name LIKE 'AUTOASSIGNROLE_%%'";
+  $vars = db_query($sql);
+  while ($var = db_fetch_object($vars)) {
+    variable_del($var->name);
+  }
+  autoassignrole_install();
+}
