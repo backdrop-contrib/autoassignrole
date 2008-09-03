@@ -74,10 +74,11 @@ function autoassignrole_user($op, &$edit, &$account, $category = NULL) {
           }
         }
         if (_autoassignrole_settings('user_sort') == "SORT_ASC") {
-          array_multisort($roles, SORT_ASC);
+          uasort($roles,'_autoassignrole_array_asc');
         }
         else {
-          array_multisort($roles, SORT_DESC);
+          print_r($roles);
+          uasort($roles,'_autoassignrole_array_desc');
         }
         
         if (!$edit || !array_key_exists('user_roles', $edit)) {
@@ -148,20 +149,6 @@ function _autoassignrole_user_input($args) {
   }
 }
 
-function _autoassignrole_intersect() {
-  $result = _autoassignrole_array_intersect_key(
-    user_roles(TRUE),
-    _autoassignrole_settings('user_roles')
-  );
-  drupal_set_message(print_r($result,true));
-  if (_autoassignrole_settings('user_sort') == "SORT_ASC") {
-    array_multisort($result, SORT_ASC);
-  }
-  else {
-    array_multisort($result, SORT_DESC);
-  }
-  return $result;
-}
 function _autoassignrole_array_intersect_key($isec, $keys) {
   $argc = func_num_args();
   if ($argc > 2) {
@@ -184,4 +171,30 @@ function _autoassignrole_array_intersect_key($isec, $keys) {
     }
     return $res;
   }
+}
+
+/**
+ * method to sort array in a descending fashion while preserving keys
+ * @param string $a a string to compare
+ * @param string $b a string to compare
+ * @return int 
+ */
+function _autoassignrole_array_desc($a, $b) {
+  if ($a == $b) {
+    return 0;
+  }
+  return ($a < $b) ? -1 : 1;
+}
+
+/**
+ * method to sort array in an ascending fashion while preserving keys
+ * @param string $a a string to compare
+ * @param string $b a string to compare
+ * @return int 
+ */
+function _autoassignrole_array_asc($a, $b) {
+  if ($a == $b) {
+    return 0;
+  }
+  return ($a > $b) ? -1 : 1;
 }
