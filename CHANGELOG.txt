@@ -1,0 +1,5 @@
+// $Id
+
+autoassignrole 7.0, xxxx-xx-xx (development version)
+------------------------
+- [#937468] Use Case - Administrator enables/disables automatic assignment

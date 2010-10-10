@@ -1,0 +1,76 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Creates tests for auto assign role module.
+ */
+
+/**
+ * Extend the DrupalWebTestCase.
+ */
+class AutoassignroleAdminSettingsTestCase extends DrupalWebTestCase {
+  protected $admin_user;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Admin Settings',
+      'description' => 'Tests the administrative setting for auto assign role',
+      'group' => 'Auto assign role',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('autoassignrole');
+    $this->admin_user = $this->drupalCreateUser(array(
+      'administer autoassignrole',
+      'access administration pages',
+    ));
+  }
+
+  /**
+   * Test admin setting functionality for autoassignrole_auto_active.
+   */
+  function testAutoActiveSettings() {
+    // Create a new user who can access the administration settings
+    $this->drupalLogin($this->admin_user);
+
+    // Check that the user can see the admin settings page.
+    $this->drupalGet('admin/config/autoassignrole/auto');
+    $this->assertField(
+     'autoassignrole_auto_active',
+     'The autoassignrole_auto_active field is accessible.'
+    );
+
+    // Enable "Automatic role assignment"
+    $edit['autoassignrole_auto_active'] = 1;
+    $this->drupalPost(
+      'admin/config/autoassignrole/auto',
+      $edit,
+      t('Save configuration')
+    );
+
+    // Verify Automatic Role Assignment has been enabled
+    $this->assertEqual(
+      variable_get('autoassignrole_auto_active', 0),
+      1,
+      'autoassignrole_auto_active has been enabled'
+    );
+
+    // Disable "Automatic role assignment"
+    $edit['autoassignrole_auto_active'] = 0;
+    $this->drupalPost(
+      'admin/config/autoassignrole/auto',
+      $edit,
+      t('Save configuration')
+    );
+
+    // Verify Automatic Role Assignment has been disabled
+    $this->assertEqual(
+      variable_get('autoassignrole_auto_active', 1),
+      0,
+      'autoassignrole_auto_active has been disabled'
+    );
+  }
+
+}
