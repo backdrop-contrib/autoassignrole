@@ -30,6 +30,7 @@ class AutoassignroleAdminSettingsTestCase extends DrupalWebTestCase {
 
   /**
    * Test admin setting functionality for autoassignrole_auto_active.
+   * @see http://drupal.org/node/937468
    */
   function testAutoActiveSettings() {
     // Create a new user who can access the administration settings
@@ -42,7 +43,7 @@ class AutoassignroleAdminSettingsTestCase extends DrupalWebTestCase {
      'The autoassignrole_auto_active field is accessible.'
     );
 
-    // Enable "Automatic role assignment"
+    // Enable autoassignrole_auto_active
     $edit['autoassignrole_auto_active'] = 1;
     $this->drupalPost(
       'admin/config/autoassignrole/auto',
@@ -50,14 +51,14 @@ class AutoassignroleAdminSettingsTestCase extends DrupalWebTestCase {
       t('Save configuration')
     );
 
-    // Verify Automatic Role Assignment has been enabled
+    // Verify autoassignrole_auto_active has been enabled
     $this->assertEqual(
       variable_get('autoassignrole_auto_active', 0),
       1,
       'autoassignrole_auto_active has been enabled'
     );
 
-    // Disable "Automatic role assignment"
+    // Disable autoassignrole_auto_active
     $edit['autoassignrole_auto_active'] = 0;
     $this->drupalPost(
       'admin/config/autoassignrole/auto',
@@ -65,7 +66,7 @@ class AutoassignroleAdminSettingsTestCase extends DrupalWebTestCase {
       t('Save configuration')
     );
 
-    // Verify Automatic Role Assignment has been disabled
+    // Verify autoassignrole_auto_active has been disabled
     $this->assertEqual(
       variable_get('autoassignrole_auto_active', 1),
       0,
@@ -73,4 +74,49 @@ class AutoassignroleAdminSettingsTestCase extends DrupalWebTestCase {
     );
   }
 
+  /**
+   * Test admin setting functionality for autoassignrole_admin_active.
+   * @see http://drupal.org/node/937666
+   */
+  function testAdminActiveSettings() {
+    // Create a new user who can access the administration settings
+    $this->drupalLogin($this->admin_user);
+
+    // Check that the user can see the admin settings page.
+    $this->drupalGet('admin/config/autoassignrole/auto');
+    $this->assertField(
+     'autoassignrole_admin_active',
+     'The autoassignrole_auto_active field is accessible.'
+    );
+
+    // Enable autoassignrole_admin_active
+    $edit['autoassignrole_admin_active'] = 1;
+    $this->drupalPost(
+      'admin/config/autoassignrole/auto',
+      $edit,
+      t('Save configuration')
+    );
+
+    // Verify autoassignrole_admin_active has been enabled
+    $this->assertEqual(
+      variable_get('autoassignrole_admin_active', 0),
+      1,
+      'autoassignrole_admin_active has been enabled'
+    );
+
+    // Disable autoassignrole_admin_active
+    $edit['autoassignrole_admin_active'] = 0;
+    $this->drupalPost(
+      'admin/config/autoassignrole/auto',
+      $edit,
+      t('Save configuration')
+    );
+
+    // Verify autoassignrole_admin_active has been disabled
+    $this->assertEqual(
+      variable_get('autoassignrole_admin_active', 1),
+      0,
+      'autoassignrole_admin_active has been disabled'
+    );
+  }
 }
