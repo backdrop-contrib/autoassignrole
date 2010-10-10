@@ -130,7 +130,7 @@ function autoassignrole_update_6000() {
     variable_del($var->name);
   }
   $items[] = array("success" => 1, "query" => "Cleaned up old variables and installed new table");
-  
+
   autoassignrole_install();
   return $items;
 }
@@ -200,7 +200,7 @@ function autoassignrole_update_6001() {
       ),
       'primary key' => array('rid'),
     );
-  
+
     db_create_table($ret, 'autoassignrole_page', $schema['autoassignrole_page']);
   }
 

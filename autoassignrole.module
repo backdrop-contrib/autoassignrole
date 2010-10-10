@@ -160,18 +160,16 @@ function autoassignrole_user($op, &$edit, &$account, $category = NULL) {
       }
       $rolenames = user_roles();
       if (_autoassignrole_get_settings('user_active') == 1) {
-        $roles = array();
         $user_roles = _autoassignrole_get_settings('user_roles');
         if (is_array($edit['user_roles'])) {
           foreach ($edit['user_roles'] as $k => $v) {
             if ($v != 0 && in_array($k, $user_roles, TRUE)) {
-              $roles[$k] = $v;
+              $edit['roles'][$k] = $v;
             }
           }
-          $edit['roles'] = $roles;
         }
         elseif ($edit['user_roles'] != '') {
-          $edit['roles'] = array($edit['user_roles'] => $edit['user_roles']);
+          $edit['roles'][$edit['user_roles']] = $edit['user_roles'];
         }
       }
       if ($rid = autoassignrole_get_active_path_rid()) {
@@ -183,7 +181,6 @@ function autoassignrole_user($op, &$edit, &$account, $category = NULL) {
           $edit['roles'][$k] = $rolenames[$k];
         }
       }
-      $account = user_load(array("uid" => $account->uid));
     break;
     case 'register':
       if (_autoassignrole_get_settings('user_active') == 1) {
@@ -261,8 +258,8 @@ function autoassignrole_user($op, &$edit, &$account, $category = NULL) {
 
 /**
  * API function that returns an array of AAR's settings.
- * 
- */ 
+ *
+ */
 function _autoassignrole_get_settings($value) {
   // if we are dealing with a variable in the format of path_field_rid get
   // variables from {autoassignrole_page}
@@ -283,7 +280,7 @@ function _autoassignrole_get_settings($value) {
       }
     }
   }
-  
+
   if (preg_match('/^path_(\d*)/i', $value, $matches)) {
   $result = db_fetch_array(db_query("SELECT path FROM {autoassignrole_page} WHERE rid = %d", $matches[1]));
     if (isset($result['path'])) {
@@ -293,7 +290,7 @@ function _autoassignrole_get_settings($value) {
       return FALSE;
     }
   }
-  
+
   // if we are not dealing with {autoassignrole_page} then get variables from
   // {autoassignrole}
   $settings = array();
@@ -301,13 +298,13 @@ function _autoassignrole_get_settings($value) {
   while ($s = db_fetch_object($result)) {
     $settings[$s->arid] = $s->value;
   }
-  
+
   // break apart auto_roles[x] and user_roles[x]
   if (preg_match('/^(\D[^_]*_\D[^_]*)\[(\d*)]/i', $value, $matches)) {
     $values = unserialize($settings[$matches[1]]);
     return $values[$matches[2]];
   }
-  
+
   switch ($value) {
     case 'auto_roles':
     case 'user_roles':
@@ -461,7 +458,8 @@ function autoassignrole_form_alter(&$form, $form_state, $form_id) {
       // Set the content types which should be shown by the content_profile_registration module
       $form['#content_profile_registration_use_types'] = array();
       foreach (content_profile_get_types('names') as $type => $name) {
-        if (in_array($rid, content_profile_get_settings($type, 'autoassignrole_use'))) {
+        $cp_settings = content_profile_get_settings($type, 'autoassignrole_use');
+        if (is_array($cp_settings) && in_array($rid, $cp_settings)) {
           $form['#content_profile_registration_use_types'][$type] = $name;
         }
       }
@@ -477,13 +475,19 @@ function autoassignrole_content_profile_admin_form_submit($form, &$form_state) {
  * Implementation of hook_content_profile_settings().
  */
 function autoassignrole_content_profile_settings() {
-  return array(
-    'autoassignrole_use' => array_keys(user_roles((TRUE))),
-  );
+  static $autoassignrole;
+  if (empty($autoassignrole)) {
+    $autoassignrole['autoassignrole_use'] = array_keys(user_roles((TRUE)));
+  }
+
+  return $autoassignrole;
 }
 
 /**
  * Returns the role id of the currently active AAR-path.
+ *
+ * @return
+ *  array An array of roles
  */
 function autoassignrole_get_active_path_rid() {
   $item = menu_get_item();
@@ -494,80 +498,175 @@ function autoassignrole_get_active_path_rid() {
 }
 
 /**
- * An API like call to return the roles a user has available or will be assigned
+ * Get all assignable roles that AAR can possibly apply.
  *
- * @param $op
- *  string all, auto, path, user
+ * @return
+ *  array An array of roles
+ */
+function autoassignrole_get_all_roles() {
+  $aar_roles = array();
+  // Select all auto and user selectable roles
+  $sql = "SELECT value FROM {autoassignrole} WHERE arid = 'auto_roles' OR arid = 'user_roles'";
+  $result = db_fetch_object(db_query($sql));
+  $aar_roles = unserialize($result->value);
+
+  // unset anything that isn't active
+  foreach ($aar_roles as $key => $value) {
+    if ($value == 0) {
+      unset($aar_roles[$key]);
+    }
+  }
+
+  // Select all path assignable roles
+  $sql = "SELECT rid FROM {autoassignrole_page}";
+  $result = db_query($sql);
+  while ($row = db_fetch_object($result)) {
+    $aar_roles[$row->rid] = $row->rid;
+  }
+  return _autoassignrole_clean_roles($aar_roles);
+}
+
+/**
+ * Get all assignable roles that AAR will apply automatically.
+ *
+ * @return
+ *  array An array of roles
+ */
+function autoassignrole_get_auto_roles() {
+  $aar_roles = array();
+  // Select all auto roles
+  $sql = "SELECT value FROM {autoassignrole} WHERE arid = 'auto_roles'";
+  $result = db_fetch_object(db_query($sql));
+  $aar_roles = unserialize($result->value);
+
+  // unset anything that isn't active
+  foreach ($aar_roles as $key => $value) {
+    if ($value == 0) {
+      unset($aar_roles[$key]);
+    }
+  }
+  return _autoassignrole_clean_roles($aar_roles);
+}
+
+/**
+ * Get all user selectable roles
+ *
+ * @return
+ *  array An array of roles
+ */
+function autoassignrole_get_user_selectable_roles() {
+  $aar_roles = array();
+  // Select all user selectable roles
+  $sql = "SELECT value FROM {autoassignrole} WHERE arid = 'user_roles'";
+  $result = db_fetch_object(db_query($sql));
+  $aar_roles = unserialize($result->value);
+  return _autoassignrole_clean_roles($aar_roles);
+}
+
+/**
+ * Get all path assignable roles
+ *
  * @param $path
  *  array Optional array of paths to restrict selection to when using an $op of path
  * @return
  *  array An array of roles
- */ 
-function autoassignrole_get_roles($op = 'all', $path = array()) {
-  $roles = user_roles();
+ */
+function autoassignrole_get_path_roles($path = array()) {
   $aar_roles = array();
-  
-  switch ($op) {
-    case 'all':
-      // Select all auto and user selectable roles
-      $sql = "SELECT value FROM {autoassignrole} WHERE arid = 'auto_roles' OR arid = 'user_roles'";
-      $result = db_fetch_object(db_query($sql));
-      $aar_roles = unserialize($result->value);
-      
-      // Select all path assignable roles
-      $sql = "SELECT DISTINCT rid FROM {autoassignrole_page}";
-      $result = db_query($sql);
-      while ($row = db_fetch_object($result)) {
-        $aar_roles[$row->rid] = $row->rid;
-      }
-      break;
-    case 'auto':
-      // Select all auto roles
-      $sql = "SELECT value FROM {autoassignrole} WHERE arid = 'auto_roles'";
-      $result = db_fetch_object(db_query($sql));
-      $aar_roles = unserialize($result->value);
-      break;
-    case 'path':
-      // Select path based roles
-      if (count($path) == 0) {
-        $sql = "SELECT DISTINCT rid FROM {autoassignrole_page}";
-        $result = db_fetch_object(db_query($sql));
-      }
-      else {
-        $sql = "SELECT DISTINCT rid FROM {autoassignrole_page} WHERE path IN(%s)";
-        $result = db_fetch_object(db_query($sql, implode(',', $path)));
-      }
-      while ($row = db_fetch_object($result)) {
-        $aar_roles[$row->rid] = $row->rid;
-      }
-      break;
-    case 'user':
-      // Select all user selectable roles
-      $sql = "SELECT value FROM {autoassignrole} WHERE arid = 'user_roles'";
-      $result = db_fetch_object(db_query($sql));
-      $aar_roles = unserialize($result->value);
-      break;
+  // Select path based roles
+  if (count($path) == 0) {
+    $sql = "SELECT rid FROM {autoassignrole_page}";
+    $result = db_query($sql);
   }
-  
+  else {
+    foreach ($path as $key => $value) {
+      $path[$key] = "'$value'";
+    }
+    $sql = "SELECT rid FROM {autoassignrole_page} WHERE path IN(". implode(',', $path) .")";
+    $result = db_query($sql);
+  }
+  while ($row = db_fetch_object($result)) {
+    $aar_roles[$row->rid] = $row->rid;
+  }
+  return _autoassignrole_clean_roles($aar_roles);
+}
+
+function _autoassignrole_clean_roles($aar_roles) {
+  $roles = user_roles();
   // Use the results of user_roles() and unset anything not available from AAR
   foreach ($roles as $key => $role) {
     if (!array_key_exists($key, $aar_roles)) {
       unset($roles[$key]);
     }
   }
-  
+
   return $roles;
 }
 
 /**
+ * Get all roles that will be assigned based on the active path
+ *
+ * @param $path
+ *  string An optional path to use as the active path
+ * @return
+ *  array An array of roles
+ */
+function autoassignrole_get_active_path_roles($path = NULL) {
+  if (!is_array($path)) {
+    $path = array($path);
+  }
+  if (count($path) == 0) {
+    $menu_item = menu_get_item();
+    $path[] = $menu_item['path'];
+  }
+  $path_roles = autoassignrole_get_path_roles($path);
+  $auto_roles = autoassignrole_get_auto_roles();
+  foreach ($auto_roles as $key => $value) {
+    $path_roles[$key] = $value;
+  }
+  return _autoassignrole_clean_roles($path_roles);
+}
+
+/**
+ * An API like call to return the roles a user has available or will be assigned
+ *
+ * @param $op
+ *  string active, all, auto, path, user
+ * @param $path
+ *  array Optional array of paths to restrict selection to when using an $op of path
+ * @return
+ *  array An array of roles
+ */
+function autoassignrole_get_roles($op = 'all', $path = array()) {
+
+  switch ($op) {
+    case 'active' :
+      return autoassignrole_get_active_path_roles($path);
+      break;
+    case 'all':
+      return autoassignrole_get_all_roles();
+      break;
+    case 'auto':
+      return autoassignrole_get_auto_roles();
+      break;
+    case 'path':
+      return autoassignrole_get_path_roles($path);
+      break;
+    case 'user':
+      return autoassignrole_get_user_selectable_roles();
+      break;
+  }
+}
+
+/**
  * Implementation of hook_menu_alter()
- * 
+ *
  * Redirect the default user register page to a path that has been designated as
  * the replacement registration path.
- */ 
+ */
 function autoassignrole_menu_alter(&$items) {
   $row = db_fetch_object(db_query("SELECT rid, path, display, title, weight, menu, registration FROM {autoassignrole_page} WHERE registration = 1"));
-  if ($row->registration) {
+  if (isset($row->registration)) {
     $path = $row->path;
   }
   else {
@@ -576,12 +675,9 @@ function autoassignrole_menu_alter(&$items) {
       $path = 'node/'. $row->value;
     }
   }
-  if ($path) {
-    $items['user/register'] = array(
-      'page arguments' => array($path),
-      'page callback' => 'drupal_goto',
-      'access callback' => 'user_register_access',
-      'type' => MENU_LOCAL_TASK,
-    );
+  if (isset($path)) {
+    $items['user/register']['page arguments'] = array($path);
+    $items['user/register']['page callback'] = 'drupal_goto';
+    $items['user/register']['type'] = MENU_LOCAL_TASK;
   }
 }

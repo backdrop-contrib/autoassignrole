@@ -19,14 +19,15 @@ class AAR extends DrupalWebTestCase {
   function createRoles($count) {
     $roles = array();
     $x = 0;
+    $permissions = array('administer autoassignrole', 'access comments', 'access content', 'post comments', 'post comments without approval');
     while ($x < $count) {
-     $role = db_fetch_object(db_query("SELECT * FROM {role} WHERE rid = '%d'", $this->_drupalCreateRole()));
+     $role = db_fetch_object(db_query("SELECT * FROM {role} WHERE rid = '%d'", $this->drupalCreateRole($permissions)));
      $roles[$role->rid] = $role->name;
      $x++;
     }
     return $roles;
   }
-  
+
   /**
    * Helper function that compares the edit array to AAR settings
    */
@@ -35,7 +36,7 @@ class AAR extends DrupalWebTestCase {
      $this->assertEqual($value, _autoassignrole_get_settings($key), $title. ': '. $key .' was set properly to ' .$value);
     }
   }
-  
+
   /**
    * Helper function that compares the edit array to AAR settings
    */
@@ -77,7 +78,7 @@ class AAR extends DrupalWebTestCase {
    }
    return $edit;
   }
-  
+
   /**
    * Helper function for new users
    */
@@ -85,10 +86,10 @@ class AAR extends DrupalWebTestCase {
    $new_user = array();
    $new_user['name']   = $this->randomName();
    $new_user['mail']   = $new_user['name'] . '@example.com';
-   
+
    return $new_user;
   }
-  
+
   /**
    * Helper function to determine sort order
    * @param array $data An array of values to check
@@ -135,7 +136,7 @@ class AAR extends DrupalWebTestCase {
 }
 
 
-class AutoassignroleAdminAutoRoleTestCase extends AAR { 
+class AutoassignroleAdminAutoRoleTestCase extends AAR {
   public static function getInfo() {
     return array(
       'name' => t('Automatic Role Settings'),
@@ -151,7 +152,7 @@ class AutoassignroleAdminAutoRoleTestCase extends AAR {
     // Check that the user can see the admin settings page.
     $this->drupalGet('admin/user/autoassignrole');
     $this->assertRaw('Automatic Role Assignment', 'The Automatic Role Assignment section exists on the AAR admin page');
-    
+
     // Enable "Automatic role assignment" and enable all test roles
     $edit = $this->getEditValues('automatic_role_assignment');
     $this->drupalPost('admin/user/autoassignrole', $edit, t('Save'));
@@ -173,7 +174,7 @@ class AutoassignroleAdminAutoRoleTestCase extends AAR {
   }
 }
 
-class AutoassignroleAdminAssignFromPathTestCase extends AAR { 
+class AutoassignroleAdminAssignFromPathTestCase extends AAR {
   public static function getInfo() {
     return array(
       'name' => t('Assign From Path Settings'),
@@ -189,7 +190,7 @@ class AutoassignroleAdminAssignFromPathTestCase extends AAR {
     // Check that the user can see the admin settings page.
     $this->drupalGet('admin/user/autoassignrole');
     $this->assertRaw('Automatic Role Assignment', 'The Automatic Role Assignment section exists on the AAR admin page');
-    
+
     // Check that each role has the correct fields in existence
     foreach ($this->roles as $rid => $role) {
      $this->assertField("path_active_$rid", "Assign from Path: $role has an Enable/Disable option", $group);
@@ -199,15 +200,15 @@ class AutoassignroleAdminAssignFromPathTestCase extends AAR {
      $this->assertField("path_title_$rid", "Assign from Path: $role has a Path Title option", $group);
      $this->assertField("path_description_$rid", "Assign from Path: $role has a Path Description option", $group);
     }
-    
+
     $edit = $this->getEditValues('assign_from_path');
     $this->drupalPost('admin/user/autoassignrole', $edit, t('Save'));
-    
+
     // verify that our changes were saved
     foreach ($edit as $key => $value) {
      $this->assertEqual($value, _autoassignrole_get_settings($key), 'Assign From Path: '. $key .' was set properly');
     }
-    
+
     // verify that a title is only required when a menu based choice is selected
     foreach ($this->roles as $rid => $role) {
      $edit["path_title_$rid"] = '';
@@ -247,7 +248,7 @@ class AutoassignroleAdminAssignFromPathTestCase extends AAR {
   }
 }
 
-class AutoassignroleAdminAllowUserChoiceTestCase extends AAR { 
+class AutoassignroleAdminAllowUserChoiceTestCase extends AAR {
   public static function getInfo() {
     return array(
       'name' => t('Allow User to Choose Settings'),
@@ -262,8 +263,9 @@ class AutoassignroleAdminAllowUserChoiceTestCase extends AAR {
 
     // Check that the user can see the admin settings page.
     $this->drupalGet('admin/user/autoassignrole');
+
     $this->assertRaw('Automatic Role Assignment', 'The Automatic Role Assignment section exists on the AAR admin page');
-    
+
     $edit = $this->getEditValues('user_choice');
 
     // if User role Selection is set to Multiple Roles then Selection Method can
@@ -272,7 +274,7 @@ class AutoassignroleAdminAllowUserChoiceTestCase extends AAR {
     $edit['user_selection'] = 0;
     $this->drupalPost('admin/user/autoassignrole', $edit, t('Save'));
     $this->assertNotEqual($edit['user_active'], _autoassignrole_get_settings('user_active'), 'Allow User to Choose: user_active failed validation correctly if role Selection is set to Multiple Roles then Selection Method can not be Radio Buttons');
-    
+
     // Get the form to pass validation
     $edit['user_multiple'] = 0;
     $this->drupalPost('admin/user/autoassignrole', $edit, t('Save'));
@@ -285,7 +287,7 @@ class AutoassignroleAdminAllowUserChoiceTestCase extends AAR {
   }
 }
 
-class AutoassignroleUserAutoRoleTestCase extends AAR { 
+class AutoassignroleUserAutoRoleTestCase extends AAR {
   public static function getInfo() {
     return array(
       'name' => t('Automatic Role Assignment'),
@@ -298,10 +300,10 @@ class AutoassignroleUserAutoRoleTestCase extends AAR {
     // Create a new user who can access the administration settings
     $admin_user = $this->drupalCreateUser(array('access administration pages', 'administer autoassignrole'));
     $this->drupalLogin($admin_user);
-    
+
     $edit = $this->getEditValues('automatic_role_assignment');
     $this->drupalPost('admin/user/autoassignrole', $edit, t('Save'));
-    
+
     $new_user = $this->drupalCreateUser();
     $this->drupalLogin($new_user);
     // check the user after login to make sure they have been assigned the appropriate
@@ -313,7 +315,7 @@ class AutoassignroleUserAutoRoleTestCase extends AAR {
   }
 }
 
-class AutoassignroleUserPathTestCase extends AAR { 
+class AutoassignroleUserPathTestCase extends AAR {
   public static function getInfo() {
     return array(
       'name' => t('Assign From Path Assignment'),
@@ -325,20 +327,20 @@ class AutoassignroleUserPathTestCase extends AAR {
   function testPathTabAssignment() {
     // Create a new user who can access the administration settings
     $this->drupalLogin($this->admin_user);
-    
+
     $edit = $this->getEditValues('assign_from_path');
     $this->drupalPost('admin/user/autoassignrole', $edit, t('Save'));
 
     //Create a new user normally and verify that no additional roles are added
     $new_user = $this->drupalCreateUser();
     $this->drupalLogin($new_user);
-    
+
     // check the user after login to make sure they have not been assigned our
     // roles
     foreach ($this->roles as $rid => $role) {
      $this->assertFalse(array_key_exists($rid, $this->loggedInUser->roles), "New User has not been assigned the role $role");
     }
-    
+
     $this->drupalLogout();
     $user_page = $this->drupalGet('user');
 
@@ -347,33 +349,33 @@ class AutoassignroleUserPathTestCase extends AAR {
      $path = $edit["path_$rid"];
      $title = $edit["path_title_$rid"];
      $description = $edit["path_description_$rid"];
-     
+
      // Make sure all tabs are on the user page with the correct titles
      $regex = '/\<ul class="tabs primary"\>.+(\/user\/'. $path .'"\>'. $title .').+\<\/ul>/si';
      $this->assertTrue(preg_match($regex, $user_page), 'A tab named '. $title .' is pointing to user/'. $path);
 
      $role_page = $this->drupalGet('user/'. $path);
-     
+
      // Verify our description is on the page
      $regex = '/\<p\>('. $description .')\<\/p>/si';
      $this->assertTrue(preg_match($regex, $role_page), 'The description '. $description .' is on the page at user/'. $path);
-     
+
      // Create a new user at this page and load the user object
     $new_user = $this->getNewUser();
     $this->drupalPost('user/'. $path, $new_user, t('Create new account'));
     $user = user_load(array('name' => $new_user['name'], 'mail' => $new_user['mail']));
-    
+
     // verify the user has been assigned only this path based and authenticated
     // user roles
      $this->assertEqual(count($user->roles), 2, 'The roles array for user '. $new_user['name'] .' is the correct size');
      $this->assertTrue(array_key_exists($rid, $user->roles), 'The user '. $new_user['name'] .' has been assigned the correct path based role');
     }
   }
-  
+
   function testPathMenuAssignment () {
     // Create a new user who can access the administration settings
     $this->drupalLogin($this->admin_user);
-    
+
     $edit = $this->getEditValues('assign_from_path');
     // for each role we are going to create a path with Display Method of Tab
     // Items
@@ -403,17 +405,17 @@ class AutoassignroleUserPathTestCase extends AAR {
     $new_user = $this->getNewUser();
     $this->drupalPost($path, $new_user, t('Create new account'));
     $user = user_load(array('name' => $new_user['name'], 'mail' => $new_user['mail']));
-    
+
     // verify the user has been assigned only this path based and authenticated
     // user roles
      $this->assertEqual(count($user->roles), 2, 'The roles array for user '. $new_user['name'] .' is the correct size');
      $this->assertTrue(array_key_exists($rid, $user->roles), 'The user '. $new_user['name'] .' has been assigned the correct path based role');
     }
   }
-  
+
 }
 
-class AutoassignroleUserChoiceTestCase extends AAR { 
+class AutoassignroleUserChoiceTestCase extends AAR {
   public static function getInfo() {
     return array(
       'name' => t('Allow User to Choose Assignment'),
@@ -425,25 +427,25 @@ class AutoassignroleUserChoiceTestCase extends AAR {
   function testUserChoiceAssignment() {
     // Create a new user who can access the administration settings
     $this->drupalLogin($this->admin_user);
-    
+
     $edit = $this->getEditValues('user_choice');
     $this->drupalPost('admin/user/autoassignrole', $edit, t('Save'));
 
     //Create a new user normally and verify that no additional roles are added
     $new_user = $this->drupalCreateUser();
     $this->drupalLogin($new_user);
-    
+
     // check the user after login to make sure they have not been assigned our
     // roles
     foreach ($this->roles as $rid => $role) {
      $this->assertFalse(array_key_exists($rid, $this->loggedInUser->roles), "New User has not been assigned the role $role");
     }
     $this->drupalLogout();
-    
+
     $user_register_page = $this->drupalGet('user/register');
      // Create a new user at this page and load the user object
     $new_user = $this->getNewUser();
-    
+
     // right now the admin settings are set to allow multiple roles but not require
     // any to be selected.  Validate selecting all available roles.
     $new_user['user_roles[]'] = array();
@@ -455,13 +457,13 @@ class AutoassignroleUserChoiceTestCase extends AAR {
     foreach ($this->roles as $rid => $role) {
       $this->assertTrue(array_key_exists($rid, $user->roles), 'The user '. $new_user['name'] .' has been assigned the correct user selected role');
     }
-    
+
     // Clear out the users selection and make sure that they can create an account
     // without selecting any roles.
     $new_user = $this->getNewUser();
     $this->drupalPost('user/register', $new_user, t('Create new account'));
     $user = user_load(array('name' => $new_user['name'], 'mail' => $new_user['mail']));
-    
+
     foreach ($this->roles as $rid => $role) {
       $this->assertFalse(array_key_exists($rid, $user->roles), 'The user '. $new_user['name'] .' was not assigned the '. $role .' role');
     }
@@ -471,18 +473,18 @@ class AutoassignroleUserChoiceTestCase extends AAR {
     $edit['user_required'] = 1;
     $this->drupalPost('admin/user/autoassignrole', $edit, t('Save'));
     $this->drupalLogout();
-   
+
     // verify a new user does not get created when submitting the registration
     // form without selecting any roles
     $new_user = $this->getNewUser();
     $this->drupalPost('user/register', $new_user, t('Create new account'));
     $user = user_load(array('name' => $new_user['name'], 'mail' => $new_user['mail']));
     $this->assertTrue(empty($user->uid), 'The user '. $new_user['name'] .' was not created');
-    
+
     // verify that the roles displayed to the user are in ascending order
    preg_match_all('/\<option value="\d+"\>([A-Za-z0-9_]+)/', $user_register_page, $matches);
    $this->assertEqual($this->getSortOrder($matches[1]), 'ASC', 'The roles presented to the user are in Ascending order');
-   
+
    // Switch roles to descending order and verify they get displayed to the user
    // in the correct order
     // use the admin form to set the role selection as required
@@ -494,7 +496,7 @@ class AutoassignroleUserChoiceTestCase extends AAR {
     // verify that the roles displayed to the user are in ascending order
    preg_match_all('/\<option value="\d+"\>([A-Za-z0-9_]+)/', $user_register_page, $matches);
    $this->assertEqual($this->getSortOrder($matches[1]), 'DESC', 'The roles presented to the user are in Descending order');
-   
+
    // Switch to check boxes and verify they appear correct order
     $this->drupalLogin($this->admin_user);
     $edit['user_selection'] = 2;
@@ -516,7 +518,7 @@ class AutoassignroleUserChoiceTestCase extends AAR {
   }
 }
 
-class AutoassignroleContentProfileTestCase extends AAR { 
+class AutoassignroleContentProfileTestCase extends AAR {
   public static function getInfo() {
     return array(
       'name' => t('Content Profile Integration'),

@@ -11,6 +11,7 @@
  */
 
 function autoassignrole_admin_form() {
+
   $form['autoassignrole_settings_auto'] = array(
     '#type' => 'fieldset',
     '#title' => t('Automatic Role Assignment'),
@@ -106,7 +107,7 @@ function autoassignrole_admin_form() {
     $form['autoassignrole_settings_page'][$k]["path_registration_$k"] = array(
       '#type' => 'radios',
       '#title' => t('Default Registration Page'),
-      '#default_value' => ($defaults[$k]['registration'] ? 1 : 0),
+      '#default_value' => (isset($defaults[$k]['registration']) ? $defaults[$k]['registration'] : 0),
       '#description' => t('Should this path replace the default user/register path?'),
       '#options' => array(1 => t('Yes'), 0 => t('No')),
     );
@@ -120,7 +121,7 @@ function autoassignrole_admin_form() {
   $form['autoassignrole_settings_page'][$k]["path_menu_$k"] = array(
     '#type' => 'select',
     '#title' => t('Menu'),
-    '#default_value' => $defaults[$k]['menu'],
+    '#default_value' => (isset($defaults[$k]['menu']) ? $defaults[$k]['menu'] : ''),
     '#description' => t('If this path is going to be displayed as a menu item which parent menu should it appear under?  This setting will be ignored for all Display Methods except Menu Items.'),
     '#options' => menu_get_menus(),
   );
@@ -276,7 +277,7 @@ function autoassignrole_admin_form_validate($form_id, &$form_state) {
           form_set_error("path_display_$rid", t('If a path serves as the default user registration page it can not have a Display Method of Tabs on registration page'));
         }
       }
-      
+
       // Check that a display option is set
       if ($display == '') {
         form_set_error("path_display_$rid", t('Please select a valid display method for enabled URL role assignments'));
@@ -299,7 +300,7 @@ function autoassignrole_admin_form_validate($form_id, &$form_state) {
               form_set_error("path_$rid", '\''. check_plain($path) .'\' '. t('is already in use as a path'));
             }
           }
-          
+
           // if the menu items are being displayed as tabs on user/* the path can
           // not be constructed in a way that makes the tab a child of an existing
           // tab.  register/* and password/* will fail
@@ -321,7 +322,7 @@ function autoassignrole_admin_form_validate($form_id, &$form_state) {
       }
     }
   }
-  
+
   // If the registration array has more than one item in it throw an error
   if (count($registration) > 1) {
     form_set_error(NULL, t('Only one path can can serve as the default user register page'));
@@ -355,8 +356,10 @@ function autoassignrole_admin_form_submit($form_id, &$form_state) {
   db_query($sql, $form_state['values']['user_selection'], 'user_selection');
   db_query($sql, $form_state['values']['auto_admin_active'], 'auto_admin_active');
   preg_match('/\[nid:(\d+)\]/', $form_state['values']['node_user_register'], $matches);
-  db_query($sql, $matches[1], 'node_user_register');
-  
+  if (isset($matches[1])) {
+    db_query($sql, $matches[1], 'node_user_register');
+  }
+
 
 
   // Role assignment based on path
@@ -388,7 +391,8 @@ function autoassignrole_admin_form_submit($form_id, &$form_state) {
 function autoassignrole_autocomplete_node($string = '') {
   $matches = array();
   if ($string) {
-    $result = db_query_range("SELECT nid, title FROM {node} WHERE LOWER(title) LIKE LOWER('%s%%') OR nid = '%d'", $string, $string, 0, 10);
+    $sql = "SELECT nid, title FROM {node} WHERE status = 1 AND (LOWER(title) LIKE LOWER('%s%%') OR nid = '%d')";
+    $result = db_query_range(db_rewrite_sql($sql), $string, $string, 0, 10);
     while ($node= db_fetch_object($result)) {
     // Add a class wrapper for a few required CSS overrides.
       $matches[check_plain($node->title) ." [nid:$node->nid]"] = "<div class=\"reference-autocomplete\">". check_plain($node->title) ." [nid:$node->nid]</div>";
