@@ -60,7 +60,7 @@ function autoassignrole_auto_settings() {
   // user by Drupal.
   $roles = user_roles(TRUE);
   unset($roles[DRUPAL_AUTHENTICATED_RID]);
-  
+
   if ($roles) {
     $form['autoassignrole_auto_roles'] = array(
       '#type' => 'checkboxes',
@@ -73,6 +73,24 @@ function autoassignrole_auto_settings() {
       '#options' => $roles,
     );
   }
+
+  return system_settings_form($form);
+}
+
+/**
+ * Form builder; The settings form for user selectable role assignment.
+ *
+ * @ingroup forms
+ * @see system_settings_form()
+ */
+function autoassignrole_user_settings() {
+  $form['autoassignrole_user_active'] = array(
+    '#type' => 'radios',
+    '#title' => t('User role assignment'),
+    '#default_value' => variable_get('autoassignrole_user_active', 0),
+    '#description' => t('Toggles allowing end users to select roles when creating their accounts.'),
+    '#options' => array(1 => t('Enabled'), 0 => t('Disabled')),
+  );
 
   return system_settings_form($form);
 }

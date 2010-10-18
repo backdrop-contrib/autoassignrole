@@ -6,3 +6,4 @@ autoassignrole 7.0, xxxx-xx-xx (development version)
 - [#937666] Use Case - Administrator enables/disables automatic assignment of
   admin created accounts
 - [#937678] Use Case - Administrator sets roles for automatic assignment
+- [#944880] Administrator toggles allowing user to select role

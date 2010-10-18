@@ -44,6 +44,14 @@ function autoassignrole_menu() {
     'page arguments' => array('autoassignrole_auto_settings'),
     'file' => 'autoassignrole.admin.inc',
   );
+  $items['admin/config/autoassignrole/user'] = array(
+    'title' => 'Allow user to choose',
+    'description' => 'Configure the ability for an end user to choose their own roles.',
+    'access arguments' => array('administer autoassignrole'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('autoassignrole_user_settings'),
+    'file' => 'autoassignrole.admin.inc',
+  );
 
   return $items;
 }
