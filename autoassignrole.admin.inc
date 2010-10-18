@@ -45,6 +45,7 @@ function autoassignrole_auto_settings() {
       Enabled to allow this functionality or Disabled to not allow.'),
     '#options' => array(1 => t('Enabled'), 0 => t('Disabled')),
   );
+
   $form['autoassignrole_admin_active'] = array(
     '#type' => 'radios',
     '#title' => t('Automatic role assignment for admin created accounts'),
@@ -54,5 +55,24 @@ function autoassignrole_auto_settings() {
       Enabled to allow this functionality or Disabled to not allow.'),
     '#options' => array(1 => t('Enabled'), 0 => t('Disabled')),
   );
+
+  // We can disregard the authenticated user role since it is assigned to each
+  // user by Drupal.
+  $roles = user_roles(TRUE);
+  unset($roles[DRUPAL_AUTHENTICATED_RID]);
+  
+  if ($roles) {
+    $form['autoassignrole_auto_roles'] = array(
+      '#type' => 'checkboxes',
+      '#title' => t('Roles'),
+      '#default_value' => variable_get('autoassignrole_auto_roles', array()),
+      '#description' => t('Check the specific Roles the user will automatically
+        be assigned to when created by an administrator or through the new user
+        registration process.  The Authenticated User role is automatically
+        assigned by Drupal core and can not be edited.'),
+      '#options' => $roles,
+    );
+  }
+
   return system_settings_form($form);
 }
