@@ -107,5 +107,13 @@ function autoassignrole_user_settings() {
     );
   }
 
+  $form['autoassignrole_user_multiple'] = array(
+    '#type' => 'radios',
+    '#title' => t('User Role Selection'),
+    '#default_value' => variable_get('autoassignrole_user_multiple', 0),
+    '#description' => t('Should the end user be allowed to choose a single role or can they choose multiple roles?'),
+    '#options' => array(0 => t('Single Role'), 1 => t('Multiple Roles')),
+  );
+
   return system_settings_form($form);
 }

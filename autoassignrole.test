@@ -242,4 +242,49 @@ class AutoassignroleAdminSettingsTestCase extends DrupalWebTestCase {
       $this->assertEqual(TRUE, array_key_exists($rid, $roles), 'Verifying that role (rid:' . $rid . ') was activated.');
     }
   }
+ /**
+  * Test admin setting functionality for autoassignrole_user_multiple.
+  * @see http://drupal.org/node/944944
+  */
+  function testAdminUserMultipleSettings() {
+    // Create a new user who can access the administration settings
+    $this->drupalLogin($this->admin_user);
+
+    // Check that the user can see the admin settings page.
+    $this->drupalGet('admin/config/autoassignrole/user');
+    $this->assertField(
+     'autoassignrole_user_multiple',
+     'The autoassignrole_user_multiple field is accessible.'
+    );
+
+    // Enable autoassignrole_user_multiple
+    $edit['autoassignrole_user_multiple'] = 1;
+    $this->drupalPost(
+      'admin/config/autoassignrole/user',
+      $edit,
+      t('Save configuration')
+    );
+
+    // Verify autoassignrole_user_multiple has been enabled
+    $this->assertEqual(
+      variable_get('autoassignrole_user_multiple', 0),
+      1,
+      'autoassignrole_user_multiple has been enabled'
+    );
+
+    // Disable autoassignrole_user_multiple
+    $edit['autoassignrole_user_multiple'] = 0;
+    $this->drupalPost(
+      'admin/config/autoassignrole/user',
+      $edit,
+      t('Save configuration')
+    );
+
+    // Verify autoassignrole_user_multiple has been disabled
+    $this->assertEqual(
+      variable_get('autoassignrole_user_multiple', 1),
+      0,
+      'autoassignrole_user_multiple has been disabled'
+    );
+  }
 }

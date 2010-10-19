@@ -8,3 +8,4 @@ autoassignrole 7.0, xxxx-xx-xx (development version)
 - [#937678] Use Case - Administrator sets roles for automatic assignment
 - [#944880] Administrator toggles allowing user to select role
 - [#944922] Administrator sets roles that will be visible to the end user
+- [#944944] Administrator toggles letting user select multiple roles
