@@ -92,5 +92,20 @@ function autoassignrole_user_settings() {
     '#options' => array(1 => t('Enabled'), 0 => t('Disabled')),
   );
 
+  // We can disregard the authenticated user role since it is assigned to each
+  // user by Drupal.
+  $roles = user_roles(TRUE);
+  unset($roles[DRUPAL_AUTHENTICATED_RID]);
+
+  if ($roles) {
+    $form['autoassignrole_user_roles'] = array(
+      '#type' => 'checkboxes',
+      '#title' => t('Roles'),
+      '#default_value' => variable_get('autoassignrole_user_roles', array()),
+      '#description' => t('Check the specific roles the user will have the option of choosing.  The Authenticated User role is automatically assigned by Drupal core and can not be edited.'),
+      '#options' => $roles,
+    );
+  }
+
   return system_settings_form($form);
 }

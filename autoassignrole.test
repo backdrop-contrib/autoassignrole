@@ -206,4 +206,40 @@ class AutoassignroleAdminSettingsTestCase extends DrupalWebTestCase {
       'autoassignrole_user_active has been disabled'
     );
   }
+
+  /**
+   * Test admin setting functionality for autoassignrole_user_roles.
+   * @see http://drupal.org/node/944922
+   */
+  function testAdminUserRolesSettings() {
+    // Create a new user who can access the administration settings
+    $this->drupalLogin($this->admin_user);
+
+    // Check that the user can see the admin settings page.
+    $this->drupalGet('admin/config/autoassignrole/user');
+
+    // Verify that there are roles exposed.
+    $this->assertField(
+     'autoassignrole_user_roles[3]',
+     'Looking for the autoassignrole_user_roles checkboxes.'
+    );
+
+    // Verify that a checkbox for each of our valid roles shows on the page.
+    foreach ($this->roles as $rid => $role) {
+      $edit["autoassignrole_user_roles[$rid]"] = $rid;
+    }
+
+    // Check each of our roles and submit the form.
+    $this->drupalPost(
+      'admin/config/autoassignrole/user',
+      $edit,
+      t('Save configuration')
+    );
+
+    // Verify the checked value was saved for each of our roles.
+    $roles = variable_get("autoassignrole_user_roles", array());
+    foreach ($this->roles as $rid => $role) {
+      $this->assertEqual(TRUE, array_key_exists($rid, $roles), 'Verifying that role (rid:' . $rid . ') was activated.');
+    }
+  }
 }
