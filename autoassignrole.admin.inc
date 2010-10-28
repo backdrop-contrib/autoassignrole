@@ -123,5 +123,16 @@ function autoassignrole_user_settings() {
     '#options' => array(0 => t('Radio Buttons'), 1 => t('Selection Box'), 2 => t('Check Boxes')),
   );
 
+  $form['autoassignrole_user_sort'] = array(
+    '#type' => 'radios',
+    '#title' => t('Sorting'),
+    '#default_value' => variable_get('autoassignrole_user_selection', 'SORT_ASC'),
+    '#description' => t('Default sort order of roles the user will see.'),
+    '#options' => array(
+      'SORT_ASC' => t('Ascending'),
+      'SORT_DESC' => t('Descending')
+    ),
+  );
+
   return system_settings_form($form);
 }

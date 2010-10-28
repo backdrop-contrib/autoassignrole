@@ -10,3 +10,4 @@ autoassignrole 7.0, xxxx-xx-xx (development version)
 - [#944922] Administrator sets roles that will be visible to the end user.
 - [#944944] Administrator toggles letting user select multiple roles.
 - [#944974] Administrator sets the selection method of roles for an end user.
+- [#944988] Administrator toggles sort order of roles exposed to an end user.

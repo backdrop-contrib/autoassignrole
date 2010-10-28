@@ -349,4 +349,50 @@ class AutoassignroleAdminSettingsTestCase extends DrupalWebTestCase {
       'autoassignrole_user_selection has been set to check box'
     );
   }
+
+/**
+ * Test admin setting functionality for autoassignrole_user_selection.
+ * @see http://drupal.org/node/944988
+ */
+  function testAdminUserSortSettings() {
+    // Create a new user who can access the administration settings
+    $this->drupalLogin($this->admin_user);
+
+    // Check that the user can see the admin settings page.
+    $this->drupalGet('admin/config/autoassignrole/user');
+    $this->assertField(
+     'autoassignrole_user_sort',
+     'The autoassignrole_user_sort field is accessible.'
+    );
+
+    // Set autoassignrole_user_sort to radio SORT_ASC.
+    $edit['autoassignrole_user_sort'] = 'SORT_ASC';
+    $this->drupalPost(
+      'admin/config/autoassignrole/user',
+      $edit,
+      t('Save configuration')
+    );
+
+    // Verify autoassignrole_user_sort has set to SORT_ASC
+    $this->assertEqual(
+      variable_get('autoassignrole_user_sort', -1),
+      'SORT_ASC',
+      'autoassignrole_user_selection has been set to SORT_ASC'
+    );
+
+    // Set autoassignrole_user_sort to SORT_DESC.
+    $edit['autoassignrole_user_sort'] = 'SORT_DESC';
+    $this->drupalPost(
+      'admin/config/autoassignrole/user',
+      $edit,
+      t('Save configuration')
+    );
+
+    // Verify autoassignrole_user_sort has been set to 'SORT_DESC'
+    $this->assertEqual(
+      variable_get('autoassignrole_user_sort', -1),
+      'SORT_DESC',
+      'autoassignrole_user_sort has been set to SORT_DESC'
+    );
+  }
 }
