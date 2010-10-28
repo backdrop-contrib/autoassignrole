@@ -66,7 +66,7 @@ function autoassignrole_auto_settings() {
       '#type' => 'checkboxes',
       '#title' => t('Roles'),
       '#default_value' => variable_get('autoassignrole_auto_roles', array()),
-      '#description' => t('Check the specific Roles the user will automatically
+      '#description' => t('Check the specific roles the user will automatically
         be assigned to when created by an administrator or through the new user
         registration process.  The Authenticated User role is automatically
         assigned by Drupal core and can not be edited.'),
@@ -109,10 +109,18 @@ function autoassignrole_user_settings() {
 
   $form['autoassignrole_user_multiple'] = array(
     '#type' => 'radios',
-    '#title' => t('User Role Selection'),
+    '#title' => t('User role selection'),
     '#default_value' => variable_get('autoassignrole_user_multiple', 0),
     '#description' => t('Should the end user be allowed to choose a single role or can they choose multiple roles?'),
     '#options' => array(0 => t('Single Role'), 1 => t('Multiple Roles')),
+  );
+
+  $form['autoassignrole_user_selection'] = array(
+    '#type' => 'radios',
+    '#title' => t('Selection method'),
+    '#default_value' => variable_get('autoassignrole_user_selection', 0),
+    '#description' => t('The type of form elements the end user will be presented with.'),
+    '#options' => array(0 => t('Radio Buttons'), 1 => t('Selection Box'), 2 => t('Check Boxes')),
   );
 
   return system_settings_form($form);

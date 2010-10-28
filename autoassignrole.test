@@ -242,10 +242,11 @@ class AutoassignroleAdminSettingsTestCase extends DrupalWebTestCase {
       $this->assertEqual(TRUE, array_key_exists($rid, $roles), 'Verifying that role (rid:' . $rid . ') was activated.');
     }
   }
- /**
-  * Test admin setting functionality for autoassignrole_user_multiple.
-  * @see http://drupal.org/node/944944
-  */
+
+/**
+ * Test admin setting functionality for autoassignrole_user_multiple.
+ * @see http://drupal.org/node/944944
+ */
   function testAdminUserMultipleSettings() {
     // Create a new user who can access the administration settings
     $this->drupalLogin($this->admin_user);
@@ -285,6 +286,67 @@ class AutoassignroleAdminSettingsTestCase extends DrupalWebTestCase {
       variable_get('autoassignrole_user_multiple', 1),
       0,
       'autoassignrole_user_multiple has been disabled'
+    );
+  }
+
+/**
+ * Test admin setting functionality for autoassignrole_user_selection.
+ * @see http://drupal.org/node/944974
+ */
+  function testAdminUserSelectionSettings() {
+    // Create a new user who can access the administration settings
+    $this->drupalLogin($this->admin_user);
+
+    // Check that the user can see the admin settings page.
+    $this->drupalGet('admin/config/autoassignrole/user');
+    $this->assertField(
+     'autoassignrole_user_selection',
+     'The autoassignrole_user_selection field is accessible.'
+    );
+
+    // Set autoassignrole_user_selection to radio inputs.
+    $edit['autoassignrole_user_selection'] = 0;
+    $this->drupalPost(
+      'admin/config/autoassignrole/user',
+      $edit,
+      t('Save configuration')
+    );
+
+    // Verify autoassignrole_user_selection has set to radio
+    $this->assertEqual(
+      variable_get('autoassignrole_user_selection', -1),
+      0,
+      'autoassignrole_user_selection has been set to radio'
+    );
+
+    // Set autoassignrole_user_selection to select box.
+    $edit['autoassignrole_user_selection'] = 1;
+    $this->drupalPost(
+      'admin/config/autoassignrole/user',
+      $edit,
+      t('Save configuration')
+    );
+
+    // Verify autoassignrole_user_selection has been set to select box
+    $this->assertEqual(
+      variable_get('autoassignrole_user_selection', -1),
+      1,
+      'autoassignrole_user_selection has been set to select box'
+    );
+
+    // Set autoassignrole_user_selection to check box.
+    $edit['autoassignrole_user_selection'] = 2;
+    $this->drupalPost(
+      'admin/config/autoassignrole/user',
+      $edit,
+      t('Save configuration')
+    );
+
+    // Verify autoassignrole_user_selection has been set to check box
+    $this->assertEqual(
+      variable_get('autoassignrole_user_selection', -1),
+      2,
+      'autoassignrole_user_selection has been set to check box'
     );
   }
 }
