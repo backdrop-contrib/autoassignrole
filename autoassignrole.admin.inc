@@ -123,6 +123,14 @@ function autoassignrole_user_settings() {
     '#options' => array(0 => t('Radio Buttons'), 1 => t('Selection Box'), 2 => t('Check Boxes')),
   );
 
+  $form['autoassignrole_user_required'] = array(
+    '#type' => 'radios',
+    '#title' => t('Required'),
+    '#default_value' => variable_get('autoassignrole_user_required', 0),
+    '#description' => t('Should the end user be required to choose a role?'),
+    '#options' => array(0 => t('No'), 1 => t('Yes')),
+  );
+
   $form['autoassignrole_user_sort'] = array(
     '#type' => 'radios',
     '#title' => t('Sorting'),

@@ -352,6 +352,52 @@ class AutoassignroleAdminSettingsTestCase extends DrupalWebTestCase {
 
 /**
  * Test admin setting functionality for autoassignrole_user_selection.
+ * @see http://drupal.org/node/944978
+ */
+  function testAdminUserSelectionRequired() {
+    // Create a new user who can access the administration settings
+    $this->drupalLogin($this->admin_user);
+
+    // Check that the user can see the admin settings page.
+    $this->drupalGet('admin/config/autoassignrole/user');
+    $this->assertField(
+     'autoassignrole_user_required',
+     'The autoassignrole_user_required field is accessible.'
+    );
+
+    // Set autoassignrole_user_required to no.
+    $edit['autoassignrole_user_required'] = 0;
+    $this->drupalPost(
+      'admin/config/autoassignrole/user',
+      $edit,
+      t('Save configuration')
+    );
+
+    // Verify autoassignrole_user_required has set to no.
+    $this->assertEqual(
+      variable_get('autoassignrole_user_required', -1),
+      0,
+      'autoassignrole_user_required has been set to radio'
+    );
+
+    // Set autoassignrole_user_required to yes.
+    $edit['autoassignrole_user_required'] = 1;
+    $this->drupalPost(
+      'admin/config/autoassignrole/user',
+      $edit,
+      t('Save configuration')
+    );
+
+    // Verify autoassignrole_user_required has been set to yes.
+    $this->assertEqual(
+      variable_get('autoassignrole_user_required', -1),
+      1,
+      'autoassignrole_user_required has been set to select box'
+    );
+  }
+
+/**
+ * Test admin setting functionality for autoassignrole_user_selection.
  * @see http://drupal.org/node/944988
  */
   function testAdminUserSortSettings() {
