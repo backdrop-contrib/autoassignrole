@@ -117,7 +117,7 @@ class AutoassignroleAdminAutoTestCase extends DrupalWebTestCase {
     $this->drupalGet('admin/config/autoassignrole/auto');
     $this->assertField(
      'autoassignrole_admin_active',
-     'The autoassignrole_auto_active field is accessible.'
+     'The autoassignrole_admin_active field is accessible.'
     );
 
     // Enable autoassignrole_admin_active
@@ -615,6 +615,47 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
       variable_get('autoassignrole_user_title', -1),
       $random_string,
       'autoassignrole_user_title has been set to random string'
+    );
+  }
+}
+
+/**
+ * Extend the DrupalWebTestCase.
+ */
+class AutoassignroleUserCreationTestCase extends DrupalWebTestCase {
+  protected $admin_user;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'User creation',
+      'description' => 'Tests the user creation functionallity for auto assign role automatic assignment',
+      'group' => 'Auto assign role',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('autoassignrole');
+    // Create a random role
+    $this->rid = $this->drupalCreateRole(array(), $this->randomName());
+    $this->roles = user_roles(TRUE);
+    unset($this->roles[DRUPAL_AUTHENTICATED_RID]);
+  }
+
+/**
+ * Test functionality for programmatic user creation.
+ * @see http://drupal.org/node/944864
+ */
+  function testUserCreateAPI() {
+   // Enable auto role assignment
+   variable_set('autoassignrole_auto_active', 1);
+   // COnfigure to assign our random role.
+   variable_set('autoassignrole_auto_roles', array($this->rid => $this->rid));
+   // Create a test user.
+   $this->test_user = $this->drupalCreateUser();
+   // Verify test user has been assigned role.
+    $this->assertTRUE(
+      array_key_exists($this->rid, $this->test_user->roles),
+      'Programmatic creation of user is automatically assigned role'
     );
   }
 }
