@@ -112,7 +112,7 @@ function autoassignrole_user_settings() {
     '#title' => t('User role selection'),
     '#default_value' => variable_get('autoassignrole_user_multiple', 0),
     '#description' => t('Should the end user be allowed to choose a single role or can they choose multiple roles?'),
-    '#options' => array(0 => t('Single Role'), 1 => t('Multiple Roles')),
+    '#options' => array(0 => t('Single role'), 1 => t('Multiple roles')),
   );
 
   $form['autoassignrole_user_selection'] = array(
@@ -120,7 +120,7 @@ function autoassignrole_user_settings() {
     '#title' => t('Selection method'),
     '#default_value' => variable_get('autoassignrole_user_selection', 0),
     '#description' => t('The type of form elements the end user will be presented with.'),
-    '#options' => array(0 => t('Radio Buttons'), 1 => t('Selection Box'), 2 => t('Check Boxes')),
+    '#options' => array(0 => t('Radio Buttons'), 1 => t('Selection Box'), 2 => t('Check boxes')),
   );
 
   $form['autoassignrole_user_required'] = array(
@@ -140,6 +140,14 @@ function autoassignrole_user_settings() {
       'SORT_ASC' => t('Ascending'),
       'SORT_DESC' => t('Descending')
     ),
+  );
+
+  $form['autoassignrole_user_description'] = array(
+    '#type' => 'textarea',
+    '#title' => t('User Role Description'),
+    '#description' => t('The description displayed to the end user when they are selecting their role during registration.'),
+    '#default_value' => variable_get('autoassignrole_user_description', t('Select a role')),
+    '#required' => FALSE,
   );
 
   $form['autoassignrole_user_fieldset_title'] = array(

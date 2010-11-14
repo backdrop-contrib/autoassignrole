@@ -443,6 +443,38 @@ class AutoassignroleAdminSettingsTestCase extends DrupalWebTestCase {
   }
 
 /**
+ * Test admin setting functionality for autoassignrole_user_description.
+ * @see http://drupal.org/node/945024
+ */
+  function testAdminUserDescriptionSettings() {
+    // Create a new user who can access the administration settings
+    $this->drupalLogin($this->admin_user);
+
+    // Check that the user can see the admin settings page.
+    $this->drupalGet('admin/config/autoassignrole/user');
+    $this->assertField(
+     'autoassignrole_user_description',
+     'The autoassignrole_user_description field is accessible.'
+    );
+
+    // Set autoassignrole_user_description to a random string.
+    $random_string = $this->randomName();
+    $edit['autoassignrole_user_description'] = $random_string;
+    $this->drupalPost(
+      'admin/config/autoassignrole/user',
+      $edit,
+      t('Save configuration')
+    );
+
+    // Verify autoassignrole_user_fieldset_title has been saved.
+    $this->assertEqual(
+      variable_get('autoassignrole_user_description', -1),
+      $random_string,
+      'autoassignrole_user_description has been set to random string'
+    );
+  }
+
+/**
  * Test admin setting functionality for autoassignrole_user_selection.
  * @see http://drupal.org/node/945010
  */
@@ -473,4 +505,5 @@ class AutoassignroleAdminSettingsTestCase extends DrupalWebTestCase {
       'autoassignrole_user_fieldset_title has been set to random string'
     );
   }
+
 }

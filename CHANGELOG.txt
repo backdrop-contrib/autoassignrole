@@ -2,6 +2,8 @@
 
 autoassignrole 7.0, xxxx-xx-xx (development version)
 ------------------------
+- [#945024] Administrator set roles description exposed when end user selects
+  roles.
 - [#945010] Administrator sets a fieldset title for roles exposed to end user.
 - [#944988] Administrator toggles sort order of roles exposed to an end user.
 - [#944978] Administrator toggles if user selection of roles is required.
