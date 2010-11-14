@@ -9,13 +9,13 @@
 /**
  * Extend the DrupalWebTestCase.
  */
-class AutoassignroleAdminSettingsTestCase extends DrupalWebTestCase {
+class AutoassignroleAdminAutoTestCase extends DrupalWebTestCase {
   protected $admin_user;
 
   public static function getInfo() {
     return array(
-      'name' => 'Admin Settings',
-      'description' => 'Tests the administrative setting for auto assign role',
+      'name' => 'Admin auto',
+      'description' => 'Tests the administrative setting for auto assign role automatic assignment',
       'group' => 'Auto assign role',
     );
   }
@@ -31,6 +31,32 @@ class AutoassignroleAdminSettingsTestCase extends DrupalWebTestCase {
 
     $this->roles = user_roles(TRUE);
     unset($this->roles[DRUPAL_AUTHENTICATED_RID]);
+  }
+
+  /**
+   * Validate that the block for this functionality exists on
+   * admin/config.
+   */
+  function testAutoConfigBlock() {
+    // Create a new user who can access the administration settings
+    $this->drupalLogin($this->admin_user);
+
+    // Check that the user can see a link to the auto settings.
+    $this->drupalGet('admin/config');
+    $this->assertLink('Auto role assignment', 0, 'Auto role assignment link exists on admin/config');
+  }
+
+  /**
+   * Validate that the block for this functionality exists on
+   * admin/config/autoassignrole.
+   */
+  function testAutoConfigAarBlock() {
+    // Create a new user who can access the administration settings
+    $this->drupalLogin($this->admin_user);
+
+    // Check that the user can see a link to the auto settings.
+    $this->drupalGet('admin/config/autoassignrole');
+    $this->assertLink('Auto role assignment', 0, 'Auto role assignment link exists on admin/config');
   }
 
   /**
@@ -159,6 +185,60 @@ class AutoassignroleAdminSettingsTestCase extends DrupalWebTestCase {
     foreach ($this->roles as $rid => $role) {
       $this->assertEqual(TRUE, array_key_exists($rid, $roles), 'Verifying that role (rid:' . $rid . ') was activated.');
     }
+  }
+}
+
+/**
+ * Extend the DrupalWebTestCase.
+ */
+class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
+  protected $admin_user;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Admin user',
+      'description' => 'Tests the administrative setting for auto assign role user selection',
+      'group' => 'Auto assign role',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('autoassignrole');
+    $this->admin_user = $this->drupalCreateUser(array(
+      'administer autoassignrole',
+      'access administration pages',
+    ));
+    $permissions = array('access content');
+    $this->drupalCreateRole($permissions);
+
+    $this->roles = user_roles(TRUE);
+    unset($this->roles[DRUPAL_AUTHENTICATED_RID]);
+  }
+
+  /**
+   * Validate that the block for this functionality exists on
+   * admin/config.
+   */
+  function testAutoConfigBlock() {
+    // Create a new user who can access the administration settings
+    $this->drupalLogin($this->admin_user);
+
+    // Check that the user can see a link to the auto settings.
+    $this->drupalGet('admin/config');
+    $this->assertLink('Allow user to choose', 0, 'Allow user to choose link exists on admin/config');
+  }
+
+  /**
+   * Validate that the block for this functionality exists on
+   * admin/config/autoassignrole.
+   */
+  function testAutoConfigAarBlock() {
+    // Create a new user who can access the administration settings
+    $this->drupalLogin($this->admin_user);
+
+    // Check that the user can see a link to the auto settings.
+    $this->drupalGet('admin/config/autoassignrole');
+    $this->assertLink('Allow user to choose', 0, 'Allow user to choose link exists on admin/config/autoassignrole');
   }
 
   /**
