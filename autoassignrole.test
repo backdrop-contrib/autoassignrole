@@ -648,7 +648,7 @@ class AutoassignroleUserCreationTestCase extends DrupalWebTestCase {
   function testUserCreateAPI() {
    // Enable auto role assignment
    variable_set('autoassignrole_auto_active', 1);
-   // COnfigure to assign our random role.
+   // Configure to assign our random role.
    variable_set('autoassignrole_auto_roles', array($this->rid => $this->rid));
    // Create a test user.
    $this->test_user = $this->drupalCreateUser();
@@ -656,6 +656,24 @@ class AutoassignroleUserCreationTestCase extends DrupalWebTestCase {
     $this->assertTRUE(
       array_key_exists($this->rid, $this->test_user->roles),
       'Programmatic creation of user is automatically assigned role'
+    );
+  }
+
+/**
+ * Test that auto roles are only assigned when they are enabled.
+ * @see http://drupal.org/node/971622
+ */
+  function testUserAutoActiveAPI() {
+   // Enable auto role assignment
+   variable_set('autoassignrole_auto_active', 0);
+   // Configure to assign our random role.
+   variable_set('autoassignrole_auto_roles', array($this->rid => $this->rid));
+   // Create a test user.
+   $this->test_user = $this->drupalCreateUser();
+   // Verify test user has been assigned role.
+    $this->assertFALSE(
+      array_key_exists($this->rid, $this->test_user->roles),
+      'User is not automatically assigned role when autoassignrole_auto_active is set to 0'
     );
   }
 }

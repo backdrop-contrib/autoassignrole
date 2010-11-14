@@ -60,18 +60,23 @@ function autoassignrole_menu() {
  * Implements hook_user_presave().
  */
 function autoassignrole_user_presave(&$edit, $account, $category) {
-  // Use case http://drupal.org/node/944864
-  // Only assign roles if this is a new account.
-  if (isset ($account->is_new) && !empty($account->is_new)) {
-    // Get the existing user roles with the exception of the anonymous role.
-    $user_roles = user_roles(TRUE);
-    $auto_roles = variable_get('autoassignrole_auto_roles', array());
-    // Add autoassignrole_auto_roles to the $edit['roles'] array if they are
-    // valid.
-    foreach ($auto_roles as $rid) {
-      // Dealing with checkbox values so anything greater than zero is valid
-      if (!empty($rid) && array_key_exists($rid, $user_roles)) {
-        $edit['roles'][$rid] = $user_roles[$rid];
+  // Use case http://drupal.org/node/971622
+  // Make sure we only assign roles automatically when enabled to do so.
+  if (variable_get('autoassignrole_auto_active', 0)) {
+
+    // Use case http://drupal.org/node/944864
+    // Only assign roles if this is a new account.
+    if (isset ($account->is_new) && !empty($account->is_new)) {
+      // Get the existing user roles with the exception of the anonymous role.
+      $user_roles = user_roles(TRUE);
+      $auto_roles = variable_get('autoassignrole_auto_roles', array());
+      // Add autoassignrole_auto_roles to the $edit['roles'] array if they are
+      // valid.
+      foreach ($auto_roles as $rid) {
+        // Dealing with checkbox values so anything greater than zero is valid
+        if (!empty($rid) && array_key_exists($rid, $user_roles)) {
+          $edit['roles'][$rid] = $user_roles[$rid];
+        }
       }
     }
   }
