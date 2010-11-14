@@ -159,5 +159,15 @@ function autoassignrole_user_settings() {
     '#maxlength' => 128
   );
 
+  $form['autoassignrole_user_title'] = array(
+    '#type' => 'textfield',
+    '#title' => t('User Role Title'),
+    '#description' => t('The title of the field that contains the role options the end user sees during registration.'),
+    '#default_value' => variable_get('autoassignrole_user_title', t('Role')),
+    '#size' => 60,
+    '#maxlength' => 128,
+    '#required' => FALSE,
+  );
+
   return system_settings_form($form);
 }

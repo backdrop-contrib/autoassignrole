@@ -2,6 +2,7 @@
 
 autoassignrole 7.0, xxxx-xx-xx (development version)
 ------------------------
+- [#945016] Administrator sets the user role field title.
 - [#945024] Administrator set roles description exposed when end user selects
   roles.
 - [#945010] Administrator sets a fieldset title for roles exposed to end user.
