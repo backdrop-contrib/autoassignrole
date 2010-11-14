@@ -2,13 +2,14 @@
 
 autoassignrole 7.0, xxxx-xx-xx (development version)
 ------------------------
-- [#937468] Use Case - Administrator enables/disables automatic assignment.
+- [#945010] Administrator sets a fieldset title for roles exposed to end user.
+- [#944988] Administrator toggles sort order of roles exposed to an end user.
+- [#944978] Administrator toggles if user selection of roles is required.
+- [#944974] Administrator sets the selection method of roles for an end user.
+- [#944944] Administrator toggles letting user select multiple roles.
+- [#944922] Administrator sets roles that will be visible to the end user.
+- [#944880] Administrator toggles allowing user to select role.
+- [#937678] Use Case - Administrator sets roles for automatic assignment.
 - [#937666] Use Case - Administrator enables/disables automatic assignment of
   admin created accounts.
-- [#937678] Use Case - Administrator sets roles for automatic assignment.
-- [#944880] Administrator toggles allowing user to select role.
-- [#944922] Administrator sets roles that will be visible to the end user.
-- [#944944] Administrator toggles letting user select multiple roles.
-- [#944974] Administrator sets the selection method of roles for an end user.
-- [#944978] Administrator toggles if user selection of roles is required.
-- [#944988] Administrator toggles sort order of roles exposed to an end user.
+- [#937468] Use Case - Administrator enables/disables automatic assignment.

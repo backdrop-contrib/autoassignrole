@@ -142,5 +142,14 @@ function autoassignrole_user_settings() {
     ),
   );
 
+  $form['autoassignrole_user_fieldset_title'] = array(
+    '#type' => 'textfield',
+    '#title' => t('User Role Fieldset Title'),
+    '#description' => t('The title of the fieldset that contains role options.'),
+    '#default_value' => variable_get('autoassignrole_user_fieldset_title', t('User Roles')),
+    '#size' => 60,
+    '#maxlength' => 128
+  );
+
   return system_settings_form($form);
 }
