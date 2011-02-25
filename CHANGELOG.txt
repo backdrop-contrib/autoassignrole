@@ -1,4 +1,3 @@
-/* $Id$ */
 
 autoassignrole 7.0, xxxx-xx-xx (development version)
 ------------------------

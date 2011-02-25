@@ -1,4 +1,3 @@
-; $Id$
 name = Auto Assign Role
 description = Automatically assign a role to new users.
 core = 7.x
