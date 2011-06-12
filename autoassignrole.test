@@ -41,21 +41,21 @@ class AutoassignroleAdminAutoTestCase extends DrupalWebTestCase {
     $this->drupalLogin($this->admin_user);
 
     // Check that the user can see a link to the auto settings.
-    $this->drupalGet('admin/config');
-    $this->assertLink('Auto role assignment', 0, 'Auto role assignment link exists on admin/config');
+    $this->drupalGet('admin/config/people');
+    $this->assertLink('Auto assign role', 0, 'Auto role assignment link exists on admin/config/people');
   }
 
   /**
    * Validate that the block for this functionality exists on
-   * admin/config/autoassignrole.
+   * admin/config/people/autoassignrole.
    */
   function testAutoConfigAarBlock() {
     // Create a new user who can access the administration settings
     $this->drupalLogin($this->admin_user);
 
     // Check that the user can see a link to the auto settings.
-    $this->drupalGet('admin/config/autoassignrole');
-    $this->assertLink('Auto role assignment', 0, 'Auto role assignment link exists on admin/config');
+    $this->drupalGet('admin/config/people/autoassignrole');
+    $this->assertLink('Automatic', 0, 'Automatic link exists on admin/config/people/autoassignrole');
   }
 
   /**
@@ -67,7 +67,7 @@ class AutoassignroleAdminAutoTestCase extends DrupalWebTestCase {
     $this->drupalLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
-    $this->drupalGet('admin/config/autoassignrole/auto');
+    $this->drupalGet('admin/config/people/autoassignrole/auto');
     $this->assertField(
      'autoassignrole_auto_active',
      'The autoassignrole_auto_active field is accessible.'
@@ -76,7 +76,7 @@ class AutoassignroleAdminAutoTestCase extends DrupalWebTestCase {
     // Enable autoassignrole_auto_active
     $edit['autoassignrole_auto_active'] = 1;
     $this->drupalPost(
-      'admin/config/autoassignrole/auto',
+      'admin/config/people/autoassignrole/auto',
       $edit,
       t('Save configuration')
     );
@@ -91,7 +91,7 @@ class AutoassignroleAdminAutoTestCase extends DrupalWebTestCase {
     // Disable autoassignrole_auto_active
     $edit['autoassignrole_auto_active'] = 0;
     $this->drupalPost(
-      'admin/config/autoassignrole/auto',
+      'admin/config/people/autoassignrole/auto',
       $edit,
       t('Save configuration')
     );
@@ -113,7 +113,7 @@ class AutoassignroleAdminAutoTestCase extends DrupalWebTestCase {
     $this->drupalLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
-    $this->drupalGet('admin/config/autoassignrole/auto');
+    $this->drupalGet('admin/config/people/autoassignrole/auto');
     $this->assertField(
      'autoassignrole_admin_active',
      'The autoassignrole_admin_active field is accessible.'
@@ -122,7 +122,7 @@ class AutoassignroleAdminAutoTestCase extends DrupalWebTestCase {
     // Enable autoassignrole_admin_active
     $edit['autoassignrole_admin_active'] = 1;
     $this->drupalPost(
-      'admin/config/autoassignrole/auto',
+      'admin/config/people/autoassignrole/auto',
       $edit,
       t('Save configuration')
     );
@@ -137,7 +137,7 @@ class AutoassignroleAdminAutoTestCase extends DrupalWebTestCase {
     // Disable autoassignrole_admin_active
     $edit['autoassignrole_admin_active'] = 0;
     $this->drupalPost(
-      'admin/config/autoassignrole/auto',
+      'admin/config/people/autoassignrole/auto',
       $edit,
       t('Save configuration')
     );
@@ -159,7 +159,7 @@ class AutoassignroleAdminAutoTestCase extends DrupalWebTestCase {
     $this->drupalLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
-    $this->drupalGet('admin/config/autoassignrole/auto');
+    $this->drupalGet('admin/config/people/autoassignrole/auto');
 
     // Verify that there are roles exposed.
     $this->assertField(
@@ -174,7 +174,7 @@ class AutoassignroleAdminAutoTestCase extends DrupalWebTestCase {
 
     // Check each of our roles and submit the form.
     $this->drupalPost(
-      'admin/config/autoassignrole/auto',
+      'admin/config/people/autoassignrole/auto',
       $edit,
       t('Save configuration')
     );
@@ -223,21 +223,21 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
     $this->drupalLogin($this->admin_user);
 
     // Check that the user can see a link to the auto settings.
-    $this->drupalGet('admin/config');
-    $this->assertLink('Allow user to choose', 0, 'Allow user to choose link exists on admin/config');
+    $this->drupalGet('admin/config/people');
+    $this->assertLink('Auto assign role', 0, 'Auto assign role link exists on admin/config/people');
   }
 
   /**
    * Validate that the block for this functionality exists on
-   * admin/config/autoassignrole.
+   * admin/config/people/autoassignrole.
    */
   function testAutoConfigAarBlock() {
     // Create a new user who can access the administration settings
     $this->drupalLogin($this->admin_user);
 
     // Check that the user can see a link to the auto settings.
-    $this->drupalGet('admin/config/autoassignrole');
-    $this->assertLink('Allow user to choose', 0, 'Allow user to choose link exists on admin/config/autoassignrole');
+    $this->drupalGet('admin/config/people/autoassignrole');
+    $this->assertLink('User choice', 0, 'Allow user to choose link exists on admin/config/people/autoassignrole');
   }
 
   /**
@@ -249,7 +249,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
     $this->drupalLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
-    $this->drupalGet('admin/config/autoassignrole/user');
+    $this->drupalGet('admin/config/people/autoassignrole/user');
     $this->assertField(
      'autoassignrole_user_active',
      'The autoassignrole_user_active field is accessible.'
@@ -258,7 +258,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
     // Enable autoassignrole_user_active
     $edit['autoassignrole_user_active'] = 1;
     $this->drupalPost(
-      'admin/config/autoassignrole/user',
+      'admin/config/people/autoassignrole/user',
       $edit,
       t('Save configuration')
     );
@@ -273,7 +273,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
     // Disable autoassignrole_user_active
     $edit['autoassignrole_user_active'] = 0;
     $this->drupalPost(
-      'admin/config/autoassignrole/user',
+      'admin/config/people/autoassignrole/user',
       $edit,
       t('Save configuration')
     );
@@ -295,7 +295,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
     $this->drupalLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
-    $this->drupalGet('admin/config/autoassignrole/user');
+    $this->drupalGet('admin/config/people/autoassignrole/user');
 
     // Verify that there are roles exposed.
     $this->assertField(
@@ -310,7 +310,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
 
     // Check each of our roles and submit the form.
     $this->drupalPost(
-      'admin/config/autoassignrole/user',
+      'admin/config/people/autoassignrole/user',
       $edit,
       t('Save configuration')
     );
@@ -331,7 +331,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
     $this->drupalLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
-    $this->drupalGet('admin/config/autoassignrole/user');
+    $this->drupalGet('admin/config/people/autoassignrole/user');
     $this->assertField(
      'autoassignrole_user_multiple',
      'The autoassignrole_user_multiple field is accessible.'
@@ -340,7 +340,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
     // Enable autoassignrole_user_multiple
     $edit['autoassignrole_user_multiple'] = 1;
     $this->drupalPost(
-      'admin/config/autoassignrole/user',
+      'admin/config/people/autoassignrole/user',
       $edit,
       t('Save configuration')
     );
@@ -355,7 +355,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
     // Disable autoassignrole_user_multiple
     $edit['autoassignrole_user_multiple'] = 0;
     $this->drupalPost(
-      'admin/config/autoassignrole/user',
+      'admin/config/people/autoassignrole/user',
       $edit,
       t('Save configuration')
     );
@@ -377,7 +377,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
     $this->drupalLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
-    $this->drupalGet('admin/config/autoassignrole/user');
+    $this->drupalGet('admin/config/people/autoassignrole/user');
     $this->assertField(
      'autoassignrole_user_selection',
      'The autoassignrole_user_selection field is accessible.'
@@ -386,7 +386,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
     // Set autoassignrole_user_selection to radio inputs.
     $edit['autoassignrole_user_selection'] = 0;
     $this->drupalPost(
-      'admin/config/autoassignrole/user',
+      'admin/config/people/autoassignrole/user',
       $edit,
       t('Save configuration')
     );
@@ -401,7 +401,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
     // Set autoassignrole_user_selection to select box.
     $edit['autoassignrole_user_selection'] = 1;
     $this->drupalPost(
-      'admin/config/autoassignrole/user',
+      'admin/config/people/autoassignrole/user',
       $edit,
       t('Save configuration')
     );
@@ -416,7 +416,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
     // Set autoassignrole_user_selection to check box.
     $edit['autoassignrole_user_selection'] = 2;
     $this->drupalPost(
-      'admin/config/autoassignrole/user',
+      'admin/config/people/autoassignrole/user',
       $edit,
       t('Save configuration')
     );
@@ -438,7 +438,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
     $this->drupalLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
-    $this->drupalGet('admin/config/autoassignrole/user');
+    $this->drupalGet('admin/config/people/autoassignrole/user');
     $this->assertField(
      'autoassignrole_user_required',
      'The autoassignrole_user_required field is accessible.'
@@ -447,7 +447,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
     // Set autoassignrole_user_required to no.
     $edit['autoassignrole_user_required'] = 0;
     $this->drupalPost(
-      'admin/config/autoassignrole/user',
+      'admin/config/people/autoassignrole/user',
       $edit,
       t('Save configuration')
     );
@@ -462,7 +462,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
     // Set autoassignrole_user_required to yes.
     $edit['autoassignrole_user_required'] = 1;
     $this->drupalPost(
-      'admin/config/autoassignrole/user',
+      'admin/config/people/autoassignrole/user',
       $edit,
       t('Save configuration')
     );
@@ -484,7 +484,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
     $this->drupalLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
-    $this->drupalGet('admin/config/autoassignrole/user');
+    $this->drupalGet('admin/config/people/autoassignrole/user');
     $this->assertField(
      'autoassignrole_user_sort',
      'The autoassignrole_user_sort field is accessible.'
@@ -493,7 +493,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
     // Set autoassignrole_user_sort to radio SORT_ASC.
     $edit['autoassignrole_user_sort'] = 'SORT_ASC';
     $this->drupalPost(
-      'admin/config/autoassignrole/user',
+      'admin/config/people/autoassignrole/user',
       $edit,
       t('Save configuration')
     );
@@ -508,7 +508,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
     // Set autoassignrole_user_sort to SORT_DESC.
     $edit['autoassignrole_user_sort'] = 'SORT_DESC';
     $this->drupalPost(
-      'admin/config/autoassignrole/user',
+      'admin/config/people/autoassignrole/user',
       $edit,
       t('Save configuration')
     );
@@ -530,7 +530,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
     $this->drupalLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
-    $this->drupalGet('admin/config/autoassignrole/user');
+    $this->drupalGet('admin/config/people/autoassignrole/user');
     $this->assertField(
      'autoassignrole_user_description',
      'The autoassignrole_user_description field is accessible.'
@@ -540,7 +540,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
     $random_string = $this->randomName();
     $edit['autoassignrole_user_description'] = $random_string;
     $this->drupalPost(
-      'admin/config/autoassignrole/user',
+      'admin/config/people/autoassignrole/user',
       $edit,
       t('Save configuration')
     );
@@ -562,7 +562,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
     $this->drupalLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
-    $this->drupalGet('admin/config/autoassignrole/user');
+    $this->drupalGet('admin/config/people/autoassignrole/user');
     $this->assertField(
      'autoassignrole_user_fieldset_title',
      'The autoassignrole_user_fieldset_title field is accessible.'
@@ -572,7 +572,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
     $random_string = $this->randomName();
     $edit['autoassignrole_user_fieldset_title'] = $random_string;
     $this->drupalPost(
-      'admin/config/autoassignrole/user',
+      'admin/config/people/autoassignrole/user',
       $edit,
       t('Save configuration')
     );
@@ -594,7 +594,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
     $this->drupalLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
-    $this->drupalGet('admin/config/autoassignrole/user');
+    $this->drupalGet('admin/config/people/autoassignrole/user');
     $this->assertField(
      'autoassignrole_user_title',
      'The autoassignrole_user_title field is accessible.'
@@ -604,7 +604,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
     $random_string = $this->randomName();
     $edit['autoassignrole_user_title'] = $random_string;
     $this->drupalPost(
-      'admin/config/autoassignrole/user',
+      'admin/config/people/autoassignrole/user',
       $edit,
       t('Save configuration')
     );

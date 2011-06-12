@@ -28,23 +28,23 @@ function autoassignrole_permission() {
  */
 function autoassignrole_menu() {
   $items = array();
-  $items['admin/config/autoassignrole'] = array(
+  $items['admin/config/people/autoassignrole'] = array(
     'title' => 'Auto assign role',
     'description' => 'Configure auto role assignment.',
     'access arguments' => array('administer autoassignrole'),
     'page callback' => 'autoassignrole_admin_block_page',
     'file' => 'autoassignrole.admin.inc',
   );
-  $items['admin/config/autoassignrole/auto'] = array(
-    'title' => 'Auto role assignment',
+  $items['admin/config/people/autoassignrole/auto'] = array(
+    'title' => 'Automatic',
     'description' => 'Configure which role(s) are automatically assigned on user creation.',
     'access arguments' => array('administer autoassignrole'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('autoassignrole_auto_settings'),
     'file' => 'autoassignrole.admin.inc',
   );
-  $items['admin/config/autoassignrole/user'] = array(
-    'title' => 'Allow user to choose',
+  $items['admin/config/people/autoassignrole/user'] = array(
+    'title' => 'User choice',
     'description' => 'Configure the ability for an end user to choose their own roles.',
     'access arguments' => array('administer autoassignrole'),
     'page callback' => 'drupal_get_form',

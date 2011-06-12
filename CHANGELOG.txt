@@ -1,6 +1,7 @@
 
 autoassignrole 7.0, xxxx-xx-xx (development version)
 ------------------------
+- [#1186328] Move menu to admin/config/people
 - [#971622] Auto Assign Role only assigns roles automatically when auto
   assignment is enabled.
 - [#944864] User object saved programmatically and assigned roles.
