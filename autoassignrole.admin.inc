@@ -117,9 +117,13 @@ function autoassignrole_user_settings() {
   $form['autoassignrole_user_selection'] = array(
     '#type' => 'radios',
     '#title' => t('Selection method'),
-    '#default_value' => variable_get('autoassignrole_user_selection', 0),
+    '#default_value' => variable_get('autoassignrole_user_selection', AUTOASSIGNROLE_ELEMENT_RADIO),
     '#description' => t('The type of form elements the end user will be presented with.'),
-    '#options' => array(0 => t('Radio Buttons'), 1 => t('Selection Box'), 2 => t('Check boxes')),
+    '#options' => array(
+      AUTOASSIGNROLE_ELEMENT_RADIO => t('Radio Buttons/Checkboxes'),
+      AUTOASSIGNROLE_ELEMENT_SELECT => t('Selection Box'),
+      AUTOASSIGNROLE_ELEMENT_CHECKBOX => t('Checkboxes'),
+    ),
   );
 
   $form['autoassignrole_user_required'] = array(
@@ -133,7 +137,7 @@ function autoassignrole_user_settings() {
   $form['autoassignrole_user_sort'] = array(
     '#type' => 'radios',
     '#title' => t('Sorting'),
-    '#default_value' => variable_get('autoassignrole_user_selection', 'SORT_ASC'),
+    '#default_value' => variable_get('autoassignrole_user_sort', 'SORT_ASC'),
     '#description' => t('Default sort order of roles the user will see.'),
     '#options' => array(
       'SORT_ASC' => t('Ascending'),
