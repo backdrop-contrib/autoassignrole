@@ -39,9 +39,7 @@ function autoassignrole_auto_settings() {
     '#type' => 'radios',
     '#title' => t('Automatic role assignment'),
     '#default_value' => variable_get('autoassignrole_auto_active', 0),
-    '#description' => t('Automatic role assignment occurs when the user first
-      logins to the account.  This happens without the users knowledge.  Set to
-      Enabled to allow this functionality or Disabled to not allow.'),
+    '#description' => t('Automatic role assignment occurs when the user first logins to the account. This happens without the users knowledge. Set to Enabled to allow this functionality or Disabled to not allow.'),
     '#options' => array(1 => t('Enabled'), 0 => t('Disabled')),
   );
 
@@ -49,9 +47,7 @@ function autoassignrole_auto_settings() {
     '#type' => 'radios',
     '#title' => t('Automatic role assignment for admin created accounts'),
     '#default_value' => variable_get('autoassignrole_admin_active', 0),
-    '#description' => t('Automatic role assignment occurs when the user first
-      logins to the account.  This happens without the users knowledge.  Set to
-      Enabled to allow this functionality or Disabled to not allow.'),
+    '#description' => t('Automatic role assignment occurs when the user first logins to the account. This happens without the users knowledge. Set to Enabled to allow this functionality or Disabled to not allow.'),
     '#options' => array(1 => t('Enabled'), 0 => t('Disabled')),
   );
 
@@ -65,10 +61,7 @@ function autoassignrole_auto_settings() {
       '#type' => 'checkboxes',
       '#title' => t('Roles'),
       '#default_value' => variable_get('autoassignrole_auto_roles', array()),
-      '#description' => t('Check the specific roles the user will automatically
-        be assigned to when created by an administrator or through the new user
-        registration process.  The Authenticated User role is automatically
-        assigned by Drupal core and can not be edited.'),
+      '#description' => t('Check the specific roles the user will automatically be assigned to when created by an administrator or through the new user registration process. The Authenticated User role is automatically assigned by Drupal core and can not be edited.'),
       '#options' => $roles,
     );
   }
@@ -101,7 +94,7 @@ function autoassignrole_user_settings() {
       '#type' => 'checkboxes',
       '#title' => t('Roles'),
       '#default_value' => variable_get('autoassignrole_user_roles', array()),
-      '#description' => t('Check the specific roles the user will have the option of choosing.  The Authenticated User role is automatically assigned by Drupal core and can not be edited.'),
+      '#description' => t('Check the specific roles the user will have the option of choosing. The Authenticated User role is automatically assigned by Drupal core and can not be edited.'),
       '#options' => $roles,
     );
   }
@@ -141,7 +134,7 @@ function autoassignrole_user_settings() {
     '#description' => t('Default sort order of roles the user will see.'),
     '#options' => array(
       'SORT_ASC' => t('Ascending'),
-      'SORT_DESC' => t('Descending')
+      'SORT_DESC' => t('Descending'),
     ),
   );
 

@@ -34,3 +34,4 @@ autoassignole 7.x-1.x, xxxx-xx-xx
 #1529314 by anzi31: Don't show the 'user choice' option when the user has the
   'administer users' role.
 #1799106 by anzi31: Improve the description of the 'user choice' option.
+#1312030 by DamienMcKenna: Fixed field description to make translation easier.
