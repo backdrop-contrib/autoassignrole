@@ -1,6 +1,5 @@
 autoassignole 7.x-1.x, xxxx-xx-xx
 ---------------------------------
-#1186328 by cyberswat: Move menu to admin/config/people
 #971622 by cyberswat: Auto Assign Role only assigns roles automatically when
   auto assignment is enabled.
 #944864 by cyberswat: User object saved programmatically and assigned roles.
@@ -26,6 +25,8 @@ autoassignole 7.x-1.x, xxxx-xx-xx
   assignment of admin by cyberswat: created accounts.
 #937468 by cyberswat: Use Case: Administrator enables/disables automatic
   assignment.
+#1186328 by cyberswat: Move menu to admin/config/people.
+#983612 by hefox, ben kuper: Add back in allow user to choose functionality.
 #1672704 by DamienMcKenna: Added hook_uninstall to remove variables.
 #1440858 by geertvd: Fixed arguments for array_unshift.
 #1795536 by ZeiP: Only auto-assign roles to accounts created by an admin.
