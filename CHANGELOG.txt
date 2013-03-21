@@ -26,3 +26,4 @@ autoassignole 7.x-1.x, xxxx-xx-xx
   assignment of admin by cyberswat: created accounts.
 #937468 by cyberswat: Use Case: Administrator enables/disables automatic
   assignment.
+#1672704 by DamienMcKenna: Added hook_uninstall to remove variables.

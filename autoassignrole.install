@@ -4,4 +4,32 @@
  * @file
  *
  * Installation related functionality for the auto assign role module.
+*/
+
+/**
+ * Implements hook_install().
  */
+// function autoassignrole_install() {
+// }
+
+/**
+ * Implements hook_uninstall().
+ */
+function autoassignrole_uninstall() {
+  variable_del('autoassignrole_admin_active');
+  variable_del('autoassignrole_auto_active');
+  variable_del('autoassignrole_auto_roles');
+  variable_del('autoassignrole_user_active');
+  variable_del('autoassignrole_user_description');
+  variable_del('autoassignrole_user_fieldset_title');
+  variable_del('autoassignrole_user_multiple');
+  variable_del('autoassignrole_user_required');
+  variable_del('autoassignrole_user_roles');
+  variable_del('autoassignrole_user_selection');
+  variable_del('autoassignrole_user_sort');
+  variable_del('autoassignrole_user_title');
+  // This functionality hasn't been added yet, but it might exist from a prior
+  // D6 installation.
+  variable_del('autoassignrole_node_user_register');
+  variable_del('autoassignrole_page_active');
+}
