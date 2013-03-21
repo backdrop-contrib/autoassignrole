@@ -30,3 +30,4 @@ autoassignole 7.x-1.x, xxxx-xx-xx
 #1672704 by DamienMcKenna: Added hook_uninstall to remove variables.
 #1440858 by geertvd: Fixed arguments for array_unshift.
 #1795536 by ZeiP: Only auto-assign roles to accounts created by an admin.
+#1672630 by DamienMcKenna: Upgrade script for D6 sites.
