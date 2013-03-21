@@ -108,7 +108,7 @@ function autoassignrole_user_presave(&$edit, $account, $category) {
  * Implements hook_form_FORM_ID_alter() for user_register_form().
  */
 function autoassignrole_form_user_register_form_alter(&$form, &$form_state) {
-  if (variable_get("autoassignrole_user_active", 0)) {
+  if (variable_get("autoassignrole_user_active", 0) && !user_access('administer users')) {
 
     // Get a list of valid roles that can be selected.
     $roles = array_intersect_key(user_roles(TRUE), array_filter(variable_get('autoassignrole_user_roles', array())));
