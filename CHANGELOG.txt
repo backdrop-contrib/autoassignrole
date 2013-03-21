@@ -1,5 +1,5 @@
-autoassignole 7.x-1.x, xxxx-xx-xx
----------------------------------
+autoassignole 7.x-1.0-beta1, 2013-03-21
+---------------------------------------
 #971622 by cyberswat: Auto Assign Role only assigns roles automatically when
   auto assignment is enabled.
 #944864 by cyberswat: User object saved programmatically and assigned roles.
