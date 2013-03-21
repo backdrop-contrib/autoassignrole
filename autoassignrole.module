@@ -133,7 +133,7 @@ function autoassignrole_form_user_register_form_alter(&$form, &$form_state) {
 
       // If not multiple + not required + select box, need a none selection.
       if (!$multiple && !variable_get('autoassignrole_user_required', 0) && $type == 'select') {
-        array_unshift(t('None'), $roles);
+        array_unshift($roles, t('None'));
       }
 
       // Add in the element

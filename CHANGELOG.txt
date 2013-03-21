@@ -27,3 +27,4 @@ autoassignole 7.x-1.x, xxxx-xx-xx
 #937468 by cyberswat: Use Case: Administrator enables/disables automatic
   assignment.
 #1672704 by DamienMcKenna: Added hook_uninstall to remove variables.
+#1440858 by geertvd: Fixed arguments for array_unshift.
