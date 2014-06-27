@@ -79,7 +79,7 @@ function autoassignrole_user_presave(&$edit, $account, $category) {
       $roles_to_add = array();
 
       // Add in automatic roles.
-      if (variable_get('autoassignrole_auto_active', 0)
+      if ((variable_get('autoassignrole_auto_active', 0) && !user_access('administer users'))
         || (variable_get('autoassignrole_admin_active', 0) && user_access('administer users'))) {
         $roles_to_add += array_intersect_key($user_roles, array_filter(variable_get('autoassignrole_auto_roles', array())));
       }
