@@ -37,7 +37,7 @@ class AutoassignroleAdminAutoTestCase extends DrupalWebTestCase {
    * admin/config.
    */
   function testAutoConfigBlock() {
-    // Create a new user who can access the administration settings
+    // Create a new user who can access the administration settings.
     $this->drupalLogin($this->admin_user);
 
     // Check that the user can see a link to the auto settings.
@@ -50,7 +50,7 @@ class AutoassignroleAdminAutoTestCase extends DrupalWebTestCase {
    * admin/config/people/autoassignrole.
    */
   function testAutoConfigAarBlock() {
-    // Create a new user who can access the administration settings
+    // Create a new user who can access the administration settings.
     $this->drupalLogin($this->admin_user);
 
     // Check that the user can see a link to the auto settings.
@@ -63,7 +63,7 @@ class AutoassignroleAdminAutoTestCase extends DrupalWebTestCase {
    * @see http://drupal.org/node/937468
    */
   function testAutoActiveSettings() {
-    // Create a new user who can access the administration settings
+    // Create a new user who can access the administration settings.
     $this->drupalLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
@@ -73,7 +73,7 @@ class AutoassignroleAdminAutoTestCase extends DrupalWebTestCase {
      'The autoassignrole_auto_active field is accessible.'
     );
 
-    // Enable autoassignrole_auto_active
+    // Enable autoassignrole_auto_active.
     $edit['autoassignrole_auto_active'] = 1;
     $this->drupalPost(
       'admin/config/people/autoassignrole/auto',
@@ -81,7 +81,7 @@ class AutoassignroleAdminAutoTestCase extends DrupalWebTestCase {
       t('Save configuration')
     );
 
-    // Verify autoassignrole_auto_active has been enabled
+    // Verify autoassignrole_auto_active has been enabled.
     $this->assertEqual(
       variable_get('autoassignrole_auto_active', 0),
       1,
@@ -96,7 +96,7 @@ class AutoassignroleAdminAutoTestCase extends DrupalWebTestCase {
       t('Save configuration')
     );
 
-    // Verify autoassignrole_auto_active has been disabled
+    // Verify autoassignrole_auto_active has been disabled.
     $this->assertEqual(
       variable_get('autoassignrole_auto_active', 1),
       0,
@@ -109,7 +109,7 @@ class AutoassignroleAdminAutoTestCase extends DrupalWebTestCase {
    * @see http://drupal.org/node/937666
    */
   function testAdminActiveSettings() {
-    // Create a new user who can access the administration settings
+    // Create a new user who can access the administration settings.
     $this->drupalLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
@@ -127,7 +127,7 @@ class AutoassignroleAdminAutoTestCase extends DrupalWebTestCase {
       t('Save configuration')
     );
 
-    // Verify autoassignrole_admin_active has been enabled
+    // Verify autoassignrole_admin_active has been enabled.
     $this->assertEqual(
       variable_get('autoassignrole_admin_active', 0),
       1,
@@ -142,7 +142,7 @@ class AutoassignroleAdminAutoTestCase extends DrupalWebTestCase {
       t('Save configuration')
     );
 
-    // Verify autoassignrole_admin_active has been disabled
+    // Verify autoassignrole_admin_active has been disabled.
     $this->assertEqual(
       variable_get('autoassignrole_admin_active', 1),
       0,
@@ -155,7 +155,7 @@ class AutoassignroleAdminAutoTestCase extends DrupalWebTestCase {
    * @see http://drupal.org/node/937678
    */
   function testAutoRolesSettings() {
-    // Create a new user who can access the administration settings
+    // Create a new user who can access the administration settings.
     $this->drupalLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
@@ -219,7 +219,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
    * admin/config.
    */
   function testAutoConfigBlock() {
-    // Create a new user who can access the administration settings
+    // Create a new user who can access the administration settings.
     $this->drupalLogin($this->admin_user);
 
     // Check that the user can see a link to the auto settings.
@@ -232,7 +232,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
    * admin/config/people/autoassignrole.
    */
   function testAutoConfigAarBlock() {
-    // Create a new user who can access the administration settings
+    // Create a new user who can access the administration settings.
     $this->drupalLogin($this->admin_user);
 
     // Check that the user can see a link to the auto settings.
@@ -245,7 +245,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
    * @see http://drupal.org/node/944880
    */
   function testAdminUserSettings() {
-    // Create a new user who can access the administration settings
+    // Create a new user who can access the administration settings.
     $this->drupalLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
@@ -255,7 +255,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
      'The autoassignrole_user_active field is accessible.'
     );
 
-    // Enable autoassignrole_user_active
+    // Enable autoassignrole_user_active.
     $edit['autoassignrole_user_active'] = 1;
     $this->drupalPost(
       'admin/config/people/autoassignrole/user',
@@ -263,7 +263,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
       t('Save configuration')
     );
 
-    // Verify autoassignrole_user_active has been enabled
+    // Verify autoassignrole_user_active has been enabled.
     $this->assertEqual(
       variable_get('autoassignrole_user_active', 0),
       1,
@@ -278,7 +278,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
       t('Save configuration')
     );
 
-    // Verify autoassignrole_user_active has been disabled
+    // Verify autoassignrole_user_active has been disabled.
     $this->assertEqual(
       variable_get('autoassignrole_user_active', 1),
       0,
@@ -291,7 +291,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
    * @see http://drupal.org/node/944922
    */
   function testAdminUserRolesSettings() {
-    // Create a new user who can access the administration settings
+    // Create a new user who can access the administration settings.
     $this->drupalLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
@@ -327,7 +327,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
  * @see http://drupal.org/node/944944
  */
   function testAdminUserMultipleSettings() {
-    // Create a new user who can access the administration settings
+    // Create a new user who can access the administration settings.
     $this->drupalLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
@@ -337,7 +337,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
      'The autoassignrole_user_multiple field is accessible.'
     );
 
-    // Enable autoassignrole_user_multiple
+    // Enable autoassignrole_user_multiple.
     $edit['autoassignrole_user_multiple'] = 1;
     $this->drupalPost(
       'admin/config/people/autoassignrole/user',
@@ -345,14 +345,14 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
       t('Save configuration')
     );
 
-    // Verify autoassignrole_user_multiple has been enabled
+    // Verify autoassignrole_user_multiple has been enabled.
     $this->assertEqual(
       variable_get('autoassignrole_user_multiple', 0),
       1,
       'autoassignrole_user_multiple has been enabled'
     );
 
-    // Disable autoassignrole_user_multiple
+    // Disable autoassignrole_user_multiple.
     $edit['autoassignrole_user_multiple'] = 0;
     $this->drupalPost(
       'admin/config/people/autoassignrole/user',
@@ -360,7 +360,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
       t('Save configuration')
     );
 
-    // Verify autoassignrole_user_multiple has been disabled
+    // Verify autoassignrole_user_multiple has been disabled.
     $this->assertEqual(
       variable_get('autoassignrole_user_multiple', 1),
       0,
@@ -373,7 +373,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
  * @see http://drupal.org/node/944974
  */
   function testAdminUserSelectionSettings() {
-    // Create a new user who can access the administration settings
+    // Create a new user who can access the administration settings.
     $this->drupalLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
@@ -391,7 +391,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
       t('Save configuration')
     );
 
-    // Verify autoassignrole_user_selection has set to radio
+    // Verify autoassignrole_user_selection has set to radio.
     $this->assertEqual(
       variable_get('autoassignrole_user_selection', -1),
       0,
@@ -406,7 +406,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
       t('Save configuration')
     );
 
-    // Verify autoassignrole_user_selection has been set to select box
+    // Verify autoassignrole_user_selection has been set to select box.
     $this->assertEqual(
       variable_get('autoassignrole_user_selection', -1),
       1,
@@ -421,7 +421,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
       t('Save configuration')
     );
 
-    // Verify autoassignrole_user_selection has been set to check box
+    // Verify autoassignrole_user_selection has been set to check box.
     $this->assertEqual(
       variable_get('autoassignrole_user_selection', -1),
       2,
@@ -434,7 +434,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
  * @see http://drupal.org/node/944978
  */
   function testAdminUserSelectionRequired() {
-    // Create a new user who can access the administration settings
+    // Create a new user who can access the administration settings.
     $this->drupalLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
@@ -480,7 +480,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
  * @see http://drupal.org/node/944988
  */
   function testAdminUserSortSettings() {
-    // Create a new user who can access the administration settings
+    // Create a new user who can access the administration settings.
     $this->drupalLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
@@ -526,7 +526,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
  * @see http://drupal.org/node/945024
  */
   function testAdminUserDescriptionSettings() {
-    // Create a new user who can access the administration settings
+    // Create a new user who can access the administration settings.
     $this->drupalLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
@@ -558,7 +558,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
  * @see http://drupal.org/node/945010
  */
   function testAdminUserFieldsetTitleSettings() {
-    // Create a new user who can access the administration settings
+    // Create a new user who can access the administration settings.
     $this->drupalLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
@@ -590,7 +590,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
  * @see http://drupal.org/node/945016
  */
   function testAdminUserTitle() {
-    // Create a new user who can access the administration settings
+    // Create a new user who can access the administration settings.
     $this->drupalLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
@@ -663,7 +663,7 @@ class AutoassignroleUserCreationTestCase extends DrupalWebTestCase {
  * @see http://drupal.org/node/971622
  */
   function testUserAutoActiveAPI() {
-   // Enable auto role assignment
+   // Enable auto role assignment.
    variable_set('autoassignrole_auto_active', 0);
    // Configure to assign our random role.
    variable_set('autoassignrole_auto_roles', array($this->rid => $this->rid));

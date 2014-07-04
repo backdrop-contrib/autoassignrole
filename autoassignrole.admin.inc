@@ -2,19 +2,19 @@
 
 /**
  * @file
- *
  * Administrative functionality for auto assign role.
  */
 
 
 /**
  * Provide a single block from the administration menu as a page.
+ *
  * This function is often a destination for these blocks.
  * For example, 'admin/structure/types' needs to have a destination to be valid
  * in the Drupal menu system, but too much information there might be
  * hidden, so we supply the contents of the block.
  *
- * @return
+ * @return String
  *   The output HTML.
  */
 function autoassignrole_admin_block_page() {
@@ -152,7 +152,7 @@ function autoassignrole_user_settings() {
     '#description' => t('The title of the fieldset that contains role options.'),
     '#default_value' => variable_get('autoassignrole_user_fieldset_title', t('User Roles')),
     '#size' => 60,
-    '#maxlength' => 128
+    '#maxlength' => 128,
   );
 
   $form['autoassignrole_user_title'] = array(

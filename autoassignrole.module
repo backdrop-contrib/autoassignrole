@@ -2,27 +2,27 @@
 
 /**
  * @file
- *
  * The main autoassignrole.module file
  *
  * Designate a role to assign all new users to in addition to providing a
  * mechanism for new users to select a role or role for their account.
  */
 
-// Says to use element of type radio for role selection
+// Says to use element of type radio for role selection.
 define('AUTOASSIGNROLE_ELEMENT_RADIO', 0);
 
-// Says to use element of type select for role selection
+// Says to use element of type select for role selection.
 define('AUTOASSIGNROLE_ELEMENT_SELECT', 1);
 
-// Says to use element of type select for checkbox selection
+// Says to use element of type select for checkbox selection.
 define('AUTOASSIGNROLE_ELEMENT_CHECKBOX', 2);
+
 /**
  * Implements hook_permission().
  */
 function autoassignrole_permission() {
   return array(
-    'administer autoassignrole' =>  array(
+    'administer autoassignrole' => array(
       'title' => t('Administer auto assign role'),
       'description' => t('Perform administration tasks for auto assign role.'),
     ),
@@ -31,8 +31,6 @@ function autoassignrole_permission() {
 
 /**
  * Implements hook_menu().
- *
- * @return array
  */
 function autoassignrole_menu() {
   $items = array();
@@ -86,7 +84,7 @@ function autoassignrole_user_presave(&$edit, $account, $category) {
 
       // Add in user selected roles if any.
       if (variable_get("autoassignrole_user_active", 0) && !empty($edit['user_roles'])) {
-        // Value is a single, convert to array
+        // Value is a single, convert to array.
         if (!is_array($edit['user_roles'])) {
           $edit['user_roles'] = array($edit['user_roles'] => $edit['user_roles']);
         }
@@ -116,12 +114,12 @@ function autoassignrole_form_user_register_form_alter(&$form, &$form_state) {
     if ($roles) {
       $form['autoassignrole_user'] = array(
         '#type' => 'fieldset',
-        '#title' =>  filter_xss(variable_get('autoassignrole_user_fieldset_title', t('User Roles'))),
+        '#title' => filter_xss(variable_get('autoassignrole_user_fieldset_title', t('User Roles'))),
         '#collapsible' => FALSE,
         '#collapsed' => FALSE,
       );
 
-      // Sort the roles
+      // Sort the roles.
       if (variable_get('autoassignrole_user_sort', 'SORT_ASC') == 'SORT_ASC') {
         asort($roles);
       }
@@ -138,7 +136,7 @@ function autoassignrole_form_user_register_form_alter(&$form, &$form_state) {
         array_unshift($roles, t('None'));
       }
 
-      // Add in the element
+      // Add in the element.
       $form['autoassignrole_user']['user_roles'] = array(
         '#type' => $type,
         '#title' => filter_xss(variable_get('autoassignrole_user_title', t('Role'))),
