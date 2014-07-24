@@ -4,9 +4,10 @@ autoassignole x.x-x.x, xxxx-xx-xx
 
 autoassignole 7.x-1.x, xxxx-xx-xx
 ---------------------------------------
-Issue #1795536 by dmadruga: Only auto-assign roles to accounts created by an
+#1795536 by dmadruga: Only auto-assign roles to accounts created by an
   admin.
 by mike.davis: Minor coding standards fixes.
+#1795536 by mike.davis: Updated automated tests to fix a bug.
 
 
 autoassignole 7.x-1.0-beta1, 2013-03-21

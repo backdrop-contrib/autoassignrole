@@ -645,13 +645,15 @@ class AutoassignroleUserCreationTestCase extends DrupalWebTestCase {
  * @see http://drupal.org/node/944864
  */
   function testUserCreateAPI() {
-   // Enable auto role assignment
-   variable_set('autoassignrole_auto_active', 1);
-   // Configure to assign our random role.
-   variable_set('autoassignrole_auto_roles', array($this->rid => $this->rid));
-   // Create a test user.
-   $this->test_user = $this->drupalCreateUser();
-   // Verify test user has been assigned role.
+    // Enable auto role assignment.
+    variable_set('autoassignrole_auto_active', 1);
+    // Enable auto assignment for admin users.
+    variable_set('autoassignrole_admin_active', 1);
+    // Configure to assign our random role.
+    variable_set('autoassignrole_auto_roles', array($this->rid => $this->rid));
+    // Create a test user.
+    $this->test_user = $this->drupalCreateUser();
+    // Verify test user has been assigned role.
     $this->assertTRUE(
       array_key_exists($this->rid, $this->test_user->roles),
       'Programmatic creation of user is automatically assigned role'
