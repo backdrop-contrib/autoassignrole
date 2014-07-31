@@ -2,7 +2,7 @@ autoassignole x.x-x.x, xxxx-xx-xx
 ---------------------------------------
 
 
-autoassignole 7.x-1.x, xxxx-xx-xx
+autoassignole 7.x-1.0-beta2, 2014-07-31
 ---------------------------------------
 #1795536 by dmadruga: Only auto-assign roles to accounts created by an
   admin.
