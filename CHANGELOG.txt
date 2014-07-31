@@ -8,6 +8,7 @@ autoassignole 7.x-1.x, xxxx-xx-xx
   admin.
 by mike.davis: Minor coding standards fixes.
 #1795536 by mike.davis: Updated automated tests to fix a bug.
+#1314668 by mike.davis: Added Sort/order user's role options by predefined.
 
 
 autoassignole 7.x-1.0-beta1, 2013-03-21

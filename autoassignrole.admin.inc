@@ -135,6 +135,7 @@ function autoassignrole_user_settings() {
     '#options' => array(
       'SORT_ASC' => t('Ascending'),
       'SORT_DESC' => t('Descending'),
+      'SORT_WEIGHT' => t('Weight of field'),
     ),
   );
 
