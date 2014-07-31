@@ -109,12 +109,11 @@ function autoassignrole_user_settings() {
   $form['autoassignrole_user_selection'] = array(
     '#type' => 'radios',
     '#title' => t('Selection method'),
-    '#default_value' => variable_get('autoassignrole_user_selection', AUTOASSIGNROLE_ELEMENT_RADIO),
+    '#default_value' => variable_get('autoassignrole_user_selection', AUTOASSIGNROLE_ELEMENT_RADIO_CHECKBOX),
     '#description' => t('The type of form elements the end user will be presented with.'),
     '#options' => array(
-      AUTOASSIGNROLE_ELEMENT_RADIO => t('Radio Buttons/Checkboxes'),
+      AUTOASSIGNROLE_ELEMENT_RADIO_CHECKBOX => t('Radio Buttons/Checkboxes'),
       AUTOASSIGNROLE_ELEMENT_SELECT => t('Selection Box'),
-      AUTOASSIGNROLE_ELEMENT_CHECKBOX => t('Checkboxes'),
     ),
   );
 

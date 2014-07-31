@@ -11,6 +11,7 @@ by mike.davis: Minor coding standards fixes.
 #1314668 by thomasgm: Added Sort/order user's role options by predefined.
 #971320 by tigerfinch, mike.davis: Added Administrator configures registration
   paths, each with customised role assignments.
+#1249458 by mike.davis: Fixed "Single role" with select box?
 
 
 autoassignole 7.x-1.0-beta1, 2013-03-21

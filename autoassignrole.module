@@ -9,13 +9,10 @@
  */
 
 // Says to use element of type radio for role selection.
-define('AUTOASSIGNROLE_ELEMENT_RADIO', 0);
+define('AUTOASSIGNROLE_ELEMENT_RADIO_CHECKBOX', 0);
 
 // Says to use element of type select for role selection.
 define('AUTOASSIGNROLE_ELEMENT_SELECT', 1);
-
-// Says to use element of type select for checkbox selection.
-define('AUTOASSIGNROLE_ELEMENT_CHECKBOX', 2);
 
 // Sets the page display for standard.
 define('AUTOASSIGNROLE_PAGE_DISPLAY_STANDARD', 0);
@@ -257,8 +254,12 @@ function autoassignrole_form_user_register_form_alter(&$form, &$form_state) {
       }
 
       $multiple = variable_get('autoassignrole_user_multiple', 0);
-      $user_selection = variable_get('autoassignrole_user_selection', AUTOASSIGNROLE_ELEMENT_RADIO);
-      $type = $user_selection == AUTOASSIGNROLE_ELEMENT_RADIO ? 'radios' : ($user_selection == AUTOASSIGNROLE_ELEMENT_CHECKBOX ? 'checkboxes' : 'select');
+      $user_selection = variable_get('autoassignrole_user_selection', AUTOASSIGNROLE_ELEMENT_RADIO_CHECKBOX);
+
+      $type = 'select';
+      if ($user_selection == AUTOASSIGNROLE_ELEMENT_RADIO_CHECKBOX) {
+        $type = $user_selection == AUTOASSIGNROLE_ELEMENT_RADIO_CHECKBOX && !$multiple ? 'radios' : 'checkboxes';
+      }
 
       // If not multiple + not required + select box, need a none selection.
       if (!$multiple && !variable_get('autoassignrole_user_required', 0) && $type == 'select') {

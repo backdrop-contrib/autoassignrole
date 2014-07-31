@@ -189,3 +189,14 @@ function autoassignrole_update_7101() {
     db_create_table('autoassignrole_page', $schema['autoassignrole_page']);
   }
 }
+
+/**
+ * Update variable autoassignrole_user_selection.
+ */
+function autoassignrole_update_7102() {
+  $user_selection = variable_get('autoassignrole_user_selection', 0);
+  // If the current user_selection is set to be a checkbox (2), update it.
+  if ($user_selection == 2) {
+    variable_set('autoassignrole_user_selection', AUTOASSIGNROLE_ELEMENT_RADIO_CHECKBOX);
+  }
+}
