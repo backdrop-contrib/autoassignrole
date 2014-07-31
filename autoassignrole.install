@@ -31,6 +31,56 @@ function autoassignrole_uninstall() {
   // D6 installation.
   variable_del('autoassignrole_node_user_register');
   variable_del('autoassignrole_page_active');
+
+  // Remove the autoassignrole_page table.
+  db_drop_table('autoassignrole_page');
+}
+
+/**
+ * Implementation of hook_schema().
+ */
+function autoassignrole_schema() {
+  $schema['autoassignrole_page'] = array(
+    'description' => 'Stores autoassignrole page information',
+    'fields' => array(
+      'rid_page_id' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'The unique identifier for this role page',
+      ),
+      'rids' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'The role IDs for this page',
+      ),
+      'path' => array(
+        'type' => 'text',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'The path for this page',
+      ),
+      'menu' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'The default parent menu for this menu item',
+      ),
+      'title' => array(
+        'type' => 'text',
+        'not null' => TRUE,
+        'description' => 'The description for this page',
+      ),
+      'display' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'description' => 'The display type for this page',
+      ),
+    ),
+    'primary key' => array('rid_page_id'),
+  );
+
+  return $schema;
 }
 
 /**
@@ -39,7 +89,6 @@ function autoassignrole_uninstall() {
 
 /**
  * Upgrade the custom table used on the D6 version.
- * TODO: Updated to handle the {autoassignrole_page} table too.
  */
 function autoassignrole_update_7100() {
   if (db_table_exists('autoassignrole')) {
@@ -89,5 +138,54 @@ function autoassignrole_update_7100() {
   }
   else {
     drupal_set_message(t('AutoAssignRole: no need to upgrade existing D7 sites.'));
+  }
+}
+
+/**
+ * Add the assign to page table.
+ */
+function autoassignrole_update_7101() {
+  if (!db_table_exists('autoassignrole_page')) {
+    $schema['autoassignrole_page'] = array(
+      'description' => 'Stores autoassignrole page information',
+      'fields' => array(
+        'rid_page_id' => array(
+          'type' => 'serial',
+          'not null' => TRUE,
+          'description' => 'The unique identifier for this role page',
+        ),
+        'rids' => array(
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'description' => 'The role IDs for this page',
+        ),
+        'path' => array(
+          'type' => 'text',
+          'length' => 255,
+          'not null' => TRUE,
+          'description' => 'The path for this page',
+        ),
+        'menu' => array(
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'description' => 'The default parent menu for this menu item',
+        ),
+        'title' => array(
+          'type' => 'text',
+          'not null' => TRUE,
+          'description' => 'The description for this page',
+        ),
+        'display' => array(
+          'type' => 'int',
+          'not null' => TRUE,
+          'description' => 'The display type for this page',
+        ),
+      ),
+      'primary key' => array('rid_page_id'),
+    );
+
+    db_create_table('autoassignrole_page', $schema['autoassignrole_page']);
   }
 }
