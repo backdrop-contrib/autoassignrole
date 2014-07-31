@@ -11,6 +11,6 @@ How to use
 --------------------------------------------------------------------------------
 
 1. Activate the Module
-3. Set permissions admin >> user >> access
-2. Go into admin >> settings >> autoassignrole and enter the role you want the
-   new users to have.  You have to type the role correctly or it will not work.
+2. Set permissions by going to People >> Permissions
+3. Go into Configuration >> People >> Auto assign role, enable automatic role
+   assignment and select the role(s) you want the new users to have.
