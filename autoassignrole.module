@@ -274,7 +274,6 @@ function autoassignrole_form_user_register_form_alter(&$form, &$form_state) {
         '#description' => filter_xss(variable_get('autoassignrole_user_description', t('Select a role'))),
         '#required' => variable_get('autoassignrole_user_required', 0),
         '#multiple' => $multiple,
-        '#options' => $roles,
       );
     }
   }
