@@ -200,3 +200,48 @@ function autoassignrole_update_7102() {
     variable_set('autoassignrole_user_selection', AUTOASSIGNROLE_ELEMENT_RADIO_CHECKBOX);
   }
 }
+
+/**
+ * Migrate db schema from Drupal 6 to 7.
+ */
+function autoassignrole_update_7103() {
+  // The current autoassignrole_page table is in a d6 format.
+  if (db_field_exists('autoassignrole_page', 'rid')) {
+    // Rename the current 'old' table.
+    db_rename_table('autoassignrole_page', 'autoassignrole_page_v6');
+    // Recreate the new table using the new schema.
+    autoassignrole_update_7101();
+
+    // Get the the contents of the old table to add to the new table.
+    $query = db_select('autoassignrole_page_v6', 'aarp6')
+      ->fields('aarp6');
+
+    $result = $query->execute();
+
+    $values = array();
+    $roles_keys = array_keys(user_roles(TRUE));
+    while ($row = $result->fetchAssoc()) {
+      foreach ($roles_keys as $role_id) {
+        $rids[$role_id] = $role_id == $row['rid'] ? $row['rid'] : 0;
+      }
+      $values[] = array(
+        'rids' => serialize($rids),
+        'path' => $row['path'],
+        'menu' => $row['menu'],
+        'title' => $row['title'],
+        'display' => $row['display'],
+      );
+    }
+
+    // Insert the values from the old table into the new table.
+    $query = db_insert('autoassignrole_page')
+      ->fields(array('rids', 'path', 'menu', 'title', 'display'));
+    foreach ($values as $record) {
+      $query->values($record);
+    }
+    $query->execute();
+
+    // Delete the old d6 table.
+    db_drop_table('autoassignrole_page_v6');
+  }
+}
