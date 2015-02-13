@@ -2,6 +2,11 @@ autoassignole x.x-x.x, xxxx-xx-xx
 ---------------------------------------
 
 
+autoassignole 7.x-1.0-beta4, 2015-02-13
+---------------------------------------
+Issue #2416387 by Stefan Vaduva: User selectable roles not working again.
+
+
 autoassignole 7.x-1.0-beta3, 2014-10-28
 ---------------------------------------
 #2313707 by mike.davis: Register by path, shows user choice of roles option.
