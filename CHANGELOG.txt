@@ -2,6 +2,11 @@ autoassignole x.x-x.x, xxxx-xx-xx
 ---------------------------------------
 
 
+autoassignole 7.x-1.0-beta5, xxxx-xx-xx
+---------------------------------------
+Issue #2314637 by mike.davis: database mismatch
+
+
 autoassignole 7.x-1.0-beta4, 2015-02-13
 ---------------------------------------
 Issue #2416387 by Stefan Vaduva: User selectable roles not working again.

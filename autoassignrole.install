@@ -56,7 +56,6 @@ function autoassignrole_schema() {
       ),
       'path' => array(
         'type' => 'text',
-        'length' => 255,
         'not null' => TRUE,
         'description' => 'The path for this page',
       ),
@@ -162,7 +161,6 @@ function autoassignrole_update_7101() {
         ),
         'path' => array(
           'type' => 'text',
-          'length' => 255,
           'not null' => TRUE,
           'description' => 'The path for this page',
         ),
