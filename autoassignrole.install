@@ -243,3 +243,17 @@ function autoassignrole_update_7103() {
     db_drop_table('autoassignrole_page_v6');
   }
 }
+
+/**
+ * Update the user description variable to allow HTML.
+ */
+function autoassignrole_update_7104() {
+  $user_desc = _autoassignrole_get_user_description();
+  if (!is_array($user_desc)) {
+    $defaults = array(
+      'value' => $user_desc,
+      'format' => filter_default_format(),
+    );
+    variable_set('autoassignrole_user_description', $defaults);
+  }
+}
