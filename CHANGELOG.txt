@@ -4,6 +4,7 @@ autoassignole x.x-x.x, xxxx-xx-xx
 
 autoassignole 7.x-1.0-beta5, xxxx-xx-xx
 ---------------------------------------
+Issue #1855766 by mike.davis: Description field
 Issue #2314637 by mike.davis: database mismatch
 
 

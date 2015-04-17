@@ -516,13 +516,13 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
     // Check that the user can see the admin settings page.
     $this->drupalGet('admin/config/people/autoassignrole/user');
     $this->assertField(
-     'autoassignrole_user_description',
+     'autoassignrole_user_description[value]',
      'The autoassignrole_user_description field is accessible.'
     );
 
     // Set autoassignrole_user_description to a random string.
     $random_string = $this->randomName();
-    $edit['autoassignrole_user_description'] = $random_string;
+    $edit['autoassignrole_user_description[value]'] = $random_string;
     $this->drupalPost(
       'admin/config/people/autoassignrole/user',
       $edit,
@@ -530,8 +530,9 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
     );
 
     // Verify autoassignrole_user_fieldset_title has been saved.
+    $autoassignrole_user_description = _autoassignrole_get_user_description();
     $this->assertEqual(
-      variable_get('autoassignrole_user_description', -1),
+      $autoassignrole_user_description['value'],
       $random_string,
       'autoassignrole_user_description has been set to random string'
     );

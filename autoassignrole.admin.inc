@@ -137,12 +137,16 @@ function autoassignrole_user_settings() {
     ),
   );
 
+  // Set the user description filter format.
+  $autoassignrole_user_description = _autoassignrole_get_user_description();
+
   $form['autoassignrole_user_description'] = array(
-    '#type' => 'textarea',
+    '#type' => 'text_format',
     '#title' => t('User Role Description'),
     '#description' => t('The description displayed to the end user when they are selecting their role during registration.'),
-    '#default_value' => variable_get('autoassignrole_user_description', t('Select a role')),
+    '#default_value' => $autoassignrole_user_description['value'],
     '#required' => FALSE,
+    '#format' => $autoassignrole_user_description['format'],
   );
 
   $form['autoassignrole_user_fieldset_title'] = array(
