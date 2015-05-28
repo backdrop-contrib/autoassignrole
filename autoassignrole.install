@@ -116,7 +116,7 @@ function autoassignrole_update_7100() {
     while ($setting = $results->fetchObject()) {
       if (isset($defaults[$setting->arid])) {
         if (strcmp($setting->value, $defaults[$setting->arid]) === 0) {
-          drupal_set_message(t('AutoAssignRole upgrade: !var is using the default value so has been skipped.', array('!var' => $setting->arid)));
+          drupal_set_message(t('AutoAssignRole upgrade: @var is using the default value so has been skipped.', array('@var' => $setting->arid)));
         }
         else {
           // Expand any serialized objects, ignore any error messages.
@@ -128,7 +128,7 @@ function autoassignrole_update_7100() {
           }
           // Save the custom value.
           variable_set('autoassignrole_' . $setting->arid, $setting->value);
-          drupal_set_message(t('AutoAssignRole upgrade: !var has been converted.', array('!var' => $setting->arid)));
+          drupal_set_message(t('AutoAssignRole upgrade: @var has been converted.', array('@var' => $setting->arid)));
         }
       }
     }
