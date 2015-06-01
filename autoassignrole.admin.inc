@@ -327,7 +327,7 @@ function autoassignrole_page_form_submit($form_id, &$form_state) {
 
   if ($return) {
     menu_rebuild();
-    drupal_set_message(t('Successfuly @operation Page @page', array('@operation' => $operation, '@page' => $page['title'])));
+    drupal_set_message(t('Successfully @operation Page @page', array('@operation' => $operation, '@page' => $page['title'])));
     drupal_goto('admin/config/people/autoassignrole/pages');
   }
   else {
