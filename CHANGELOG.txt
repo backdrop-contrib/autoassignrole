@@ -6,6 +6,8 @@ autoassignole 7.x-1.0-beta5, xxxx-xx-xx
 ---------------------------------------
 Issue #1855766 by mike.davis: Description field
 Issue #2314637 by mike.davis: database mismatch
+Issue #2313197 by mike.davis: Administrator configures registration paths -
+  simpletests
 
 
 autoassignole 7.x-1.0-beta4, 2015-02-13
