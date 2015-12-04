@@ -1,8 +1,6 @@
 name = Auto Assign Role
 description = Automatically assign a role to new users.
-core = 7.x
+backdrop = 1.x
+type= module
 configure=admin/config/people/autoassignrole
-version = VERSION
-files[] = autoassignrole.module
-files[] = autoassignrole.admin.inc
-files[] = autoassignrole.test
+version = 1.x

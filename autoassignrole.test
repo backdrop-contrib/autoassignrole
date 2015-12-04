@@ -6,9 +6,9 @@
  */
 
 /**
- * Extend the DrupalWebTestCase.
+ * Extend the BackdropWebTestCase.
  */
-class AutoassignroleAdminAutoTestCase extends DrupalWebTestCase {
+class AutoassignroleAdminAutoTestCase extends BackdropWebTestCase {
   protected $admin_user;
 
   public static function getInfo() {
@@ -21,15 +21,15 @@ class AutoassignroleAdminAutoTestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('autoassignrole');
-    $this->admin_user = $this->drupalCreateUser(array(
+    $this->admin_user = $this->backdropCreateUser(array(
       'administer autoassignrole',
       'access administration pages',
     ));
     $permissions = array('access content');
-    $this->drupalCreateRole($permissions);
+    $this->backdropCreateRole($permissions);
 
     $this->roles = user_roles(TRUE);
-    unset($this->roles[DRUPAL_AUTHENTICATED_RID]);
+    unset($this->roles[BACKDROP_AUTHENTICATED_ROLE]);
   }
 
   /**
@@ -38,11 +38,11 @@ class AutoassignroleAdminAutoTestCase extends DrupalWebTestCase {
    */
   function testAutoConfigBlock() {
     // Create a new user who can access the administration settings.
-    $this->drupalLogin($this->admin_user);
+    $this->backdropLogin($this->admin_user);
 
     // Check that the user can see a link to the auto settings.
-    $this->drupalGet('admin/config/people');
-    $this->assertLink('Auto assign role', 0, 'Auto role assignment link exists on admin/config/people');
+    $this->backdropGet('admin/config/people');
+    $this->assertLink('Auto assign role', 'Auto role assignment link exists on admin/config/people');
   }
 
   /**
@@ -51,23 +51,23 @@ class AutoassignroleAdminAutoTestCase extends DrupalWebTestCase {
    */
   function testAutoConfigAarBlock() {
     // Create a new user who can access the administration settings.
-    $this->drupalLogin($this->admin_user);
+    $this->backdropLogin($this->admin_user);
 
     // Check that the user can see a link to the auto settings.
-    $this->drupalGet('admin/config/people/autoassignrole');
-    $this->assertLink('Automatic', 0, 'Automatic link exists on admin/config/people/autoassignrole');
+    $this->backdropGet('admin/config/people/autoassignrole');
+    $this->assertLink('Automatic', 'Automatic link exists on admin/config/people/autoassignrole');
   }
 
   /**
    * Test admin setting functionality for autoassignrole_auto_active.
-   * @see http://drupal.org/node/937468
+   * @see http://backdrop.org/node/937468
    */
   function testAutoActiveSettings() {
     // Create a new user who can access the administration settings.
-    $this->drupalLogin($this->admin_user);
+    $this->backdropLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
-    $this->drupalGet('admin/config/people/autoassignrole/auto');
+    $this->backdropGet('admin/config/people/autoassignrole/auto');
     $this->assertField(
      'autoassignrole_auto_active',
      'The autoassignrole_auto_active field is accessible.'
@@ -75,7 +75,7 @@ class AutoassignroleAdminAutoTestCase extends DrupalWebTestCase {
 
     // Enable autoassignrole_auto_active.
     $edit['autoassignrole_auto_active'] = 1;
-    $this->drupalPost(
+    $this->backdropPost(
       'admin/config/people/autoassignrole/auto',
       $edit,
       t('Save configuration')
@@ -83,14 +83,14 @@ class AutoassignroleAdminAutoTestCase extends DrupalWebTestCase {
 
     // Verify autoassignrole_auto_active has been enabled.
     $this->assertEqual(
-      variable_get('autoassignrole_auto_active', 0),
+      config_get('autoassignrole', 'autoassignrole_auto_active'),
       1,
       'autoassignrole_auto_active has been enabled'
     );
 
     // Disable autoassignrole_auto_active
     $edit['autoassignrole_auto_active'] = 0;
-    $this->drupalPost(
+    $this->backdropPost(
       'admin/config/people/autoassignrole/auto',
       $edit,
       t('Save configuration')
@@ -98,7 +98,7 @@ class AutoassignroleAdminAutoTestCase extends DrupalWebTestCase {
 
     // Verify autoassignrole_auto_active has been disabled.
     $this->assertEqual(
-      variable_get('autoassignrole_auto_active', 1),
+      config_get('autoassignrole', 'autoassignrole_auto_active'),
       0,
       'autoassignrole_auto_active has been disabled'
     );
@@ -106,14 +106,14 @@ class AutoassignroleAdminAutoTestCase extends DrupalWebTestCase {
 
   /**
    * Test admin setting functionality for autoassignrole_admin_active.
-   * @see http://drupal.org/node/937666
+   * @see http://backdrop.org/node/937666
    */
   function testAdminActiveSettings() {
     // Create a new user who can access the administration settings.
-    $this->drupalLogin($this->admin_user);
+    $this->backdropLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
-    $this->drupalGet('admin/config/people/autoassignrole/auto');
+    $this->backdropGet('admin/config/people/autoassignrole/auto');
     $this->assertField(
      'autoassignrole_admin_active',
      'The autoassignrole_admin_active field is accessible.'
@@ -121,7 +121,7 @@ class AutoassignroleAdminAutoTestCase extends DrupalWebTestCase {
 
     // Enable autoassignrole_admin_active
     $edit['autoassignrole_admin_active'] = 1;
-    $this->drupalPost(
+    $this->backdropPost(
       'admin/config/people/autoassignrole/auto',
       $edit,
       t('Save configuration')
@@ -129,14 +129,14 @@ class AutoassignroleAdminAutoTestCase extends DrupalWebTestCase {
 
     // Verify autoassignrole_admin_active has been enabled.
     $this->assertEqual(
-      variable_get('autoassignrole_admin_active', 0),
+      config_get('autoassignrole', 'autoassignrole_admin_active'),
       1,
       'autoassignrole_admin_active has been enabled'
     );
 
     // Disable autoassignrole_admin_active
     $edit['autoassignrole_admin_active'] = 0;
-    $this->drupalPost(
+    $this->backdropPost(
       'admin/config/people/autoassignrole/auto',
       $edit,
       t('Save configuration')
@@ -144,7 +144,7 @@ class AutoassignroleAdminAutoTestCase extends DrupalWebTestCase {
 
     // Verify autoassignrole_admin_active has been disabled.
     $this->assertEqual(
-      variable_get('autoassignrole_admin_active', 1),
+      config_get('autoassignrole', 'autoassignrole_admin_active'),
       0,
       'autoassignrole_admin_active has been disabled'
     );
@@ -152,14 +152,14 @@ class AutoassignroleAdminAutoTestCase extends DrupalWebTestCase {
 
   /**
    * Test admin setting functionality for autoassignrole_auto_roles.
-   * @see http://drupal.org/node/937678
+   * @see http://backdrop.org/node/937678
    */
   function testAutoRolesSettings() {
     // Create a new user who can access the administration settings.
-    $this->drupalLogin($this->admin_user);
+    $this->backdropLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
-    $this->drupalGet('admin/config/people/autoassignrole/auto');
+    $this->backdropGet('admin/config/people/autoassignrole/auto');
 
     // Verify that there are roles exposed.
     $this->assertField(
@@ -173,14 +173,14 @@ class AutoassignroleAdminAutoTestCase extends DrupalWebTestCase {
     }
 
     // Check each of our roles and submit the form.
-    $this->drupalPost(
+    $this->backdropPost(
       'admin/config/people/autoassignrole/auto',
       $edit,
       t('Save configuration')
     );
 
     // Verify the checked value was saved for each of our roles.
-    $roles = variable_get("autoassignrole_auto_roles", array());
+    $roles = config_get('autoassignrole', "autoassignrole_auto_roles");
     foreach ($this->roles as $rid => $role) {
       $this->assertEqual(TRUE, array_key_exists($rid, $roles), 'Verifying that role (rid:' . $rid . ') was activated.');
     }
@@ -188,9 +188,9 @@ class AutoassignroleAdminAutoTestCase extends DrupalWebTestCase {
 }
 
 /**
- * Extend the DrupalWebTestCase.
+ * Extend the BackdropWebTestCase.
  */
-class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
+class AutoassignroleAdminUserTestCase extends BackdropWebTestCase {
   protected $admin_user;
 
   public static function getInfo() {
@@ -203,15 +203,15 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('autoassignrole');
-    $this->admin_user = $this->drupalCreateUser(array(
+    $this->admin_user = $this->backdropCreateUser(array(
       'administer autoassignrole',
       'access administration pages',
     ));
     $permissions = array('access content');
-    $this->drupalCreateRole($permissions);
+    $this->backdropCreateRole($permissions);
 
     $this->roles = user_roles(TRUE);
-    unset($this->roles[DRUPAL_AUTHENTICATED_RID]);
+    unset($this->roles[BACKDROP_AUTHENTICATED_ROLE]);
   }
 
   /**
@@ -219,11 +219,11 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
    */
   function testAutoConfigBlock() {
     // Create a new user who can access the administration settings.
-    $this->drupalLogin($this->admin_user);
+    $this->backdropLogin($this->admin_user);
 
     // Check that the user can see a link to the auto settings.
-    $this->drupalGet('admin/config/people');
-    $this->assertLink('Auto assign role', 0, 'Auto assign role link exists on admin/config/people');
+    $this->backdropGet('admin/config/people');
+    $this->assertLink('Auto assign role', 'Auto assign role link exists on admin/config/people');
   }
 
   /**
@@ -232,23 +232,23 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
    */
   function testAutoConfigAarBlock() {
     // Create a new user who can access the administration settings.
-    $this->drupalLogin($this->admin_user);
+    $this->backdropLogin($this->admin_user);
 
     // Check that the user can see a link to the auto settings.
-    $this->drupalGet('admin/config/people/autoassignrole');
-    $this->assertLink('User choice', 0, 'Allow user to choose link exists on admin/config/people/autoassignrole');
+    $this->backdropGet('admin/config/people/autoassignrole');
+    $this->assertLink('User choice', 'Allow user to choose link exists on admin/config/people/autoassignrole');
   }
 
   /**
    * Test admin setting functionality for autoassignrole_user_active.
-   * @see http://drupal.org/node/944880
+   * @see http://backdrop.org/node/944880
    */
   function testAdminUserSettings() {
     // Create a new user who can access the administration settings.
-    $this->drupalLogin($this->admin_user);
+    $this->backdropLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
-    $this->drupalGet('admin/config/people/autoassignrole/user');
+    $this->backdropGet('admin/config/people/autoassignrole/user');
     $this->assertField(
      'autoassignrole_user_active',
      'The autoassignrole_user_active field is accessible.'
@@ -256,7 +256,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
 
     // Enable autoassignrole_user_active.
     $edit['autoassignrole_user_active'] = 1;
-    $this->drupalPost(
+    $this->backdropPost(
       'admin/config/people/autoassignrole/user',
       $edit,
       t('Save configuration')
@@ -264,14 +264,14 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
 
     // Verify autoassignrole_user_active has been enabled.
     $this->assertEqual(
-      variable_get('autoassignrole_user_active', 0),
+      config_get('autoassignrole', 'autoassignrole_user_active'),
       1,
       'autoassignrole_user_active has been enabled'
     );
 
     // Disable autoassignrole_user_active
     $edit['autoassignrole_user_active'] = 0;
-    $this->drupalPost(
+    $this->backdropPost(
       'admin/config/people/autoassignrole/user',
       $edit,
       t('Save configuration')
@@ -279,7 +279,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
 
     // Verify autoassignrole_user_active has been disabled.
     $this->assertEqual(
-      variable_get('autoassignrole_user_active', 1),
+      config_get('autoassignrole', 'autoassignrole_user_active'),
       0,
       'autoassignrole_user_active has been disabled'
     );
@@ -287,14 +287,14 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
 
   /**
    * Test admin setting functionality for autoassignrole_user_roles.
-   * @see http://drupal.org/node/944922
+   * @see http://backdrop.org/node/944922
    */
   function testAdminUserRolesSettings() {
     // Create a new user who can access the administration settings.
-    $this->drupalLogin($this->admin_user);
+    $this->backdropLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
-    $this->drupalGet('admin/config/people/autoassignrole/user');
+    $this->backdropGet('admin/config/people/autoassignrole/user');
 
     // Verify that there are roles exposed.
     $this->assertField(
@@ -308,14 +308,14 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
     }
 
     // Check each of our roles and submit the form.
-    $this->drupalPost(
+    $this->backdropPost(
       'admin/config/people/autoassignrole/user',
       $edit,
       t('Save configuration')
     );
 
     // Verify the checked value was saved for each of our roles.
-    $roles = variable_get("autoassignrole_user_roles", array());
+    $roles = config_get('autoassignrole', "autoassignrole_user_roles");
     foreach ($this->roles as $rid => $role) {
       $this->assertEqual(TRUE, array_key_exists($rid, $roles), 'Verifying that role (rid:' . $rid . ') was activated.');
     }
@@ -323,14 +323,14 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
 
   /**
    * Test admin setting functionality for autoassignrole_user_multiple.
-   * @see http://drupal.org/node/944944
+   * @see http://backdrop.org/node/944944
    */
   function testAdminUserMultipleSettings() {
     // Create a new user who can access the administration settings.
-    $this->drupalLogin($this->admin_user);
+    $this->backdropLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
-    $this->drupalGet('admin/config/people/autoassignrole/user');
+    $this->backdropGet('admin/config/people/autoassignrole/user');
     $this->assertField(
      'autoassignrole_user_multiple',
      'The autoassignrole_user_multiple field is accessible.'
@@ -338,7 +338,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
 
     // Enable autoassignrole_user_multiple.
     $edit['autoassignrole_user_multiple'] = 1;
-    $this->drupalPost(
+    $this->backdropPost(
       'admin/config/people/autoassignrole/user',
       $edit,
       t('Save configuration')
@@ -346,14 +346,14 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
 
     // Verify autoassignrole_user_multiple has been enabled.
     $this->assertEqual(
-      variable_get('autoassignrole_user_multiple', 0),
+      config_get('autoassignrole', 'autoassignrole_user_multiple'),
       1,
       'autoassignrole_user_multiple has been enabled'
     );
 
     // Disable autoassignrole_user_multiple.
     $edit['autoassignrole_user_multiple'] = 0;
-    $this->drupalPost(
+    $this->backdropPost(
       'admin/config/people/autoassignrole/user',
       $edit,
       t('Save configuration')
@@ -361,7 +361,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
 
     // Verify autoassignrole_user_multiple has been disabled.
     $this->assertEqual(
-      variable_get('autoassignrole_user_multiple', 1),
+      config_get('autoassignrole', 'autoassignrole_user_multiple'),
       0,
       'autoassignrole_user_multiple has been disabled'
     );
@@ -369,14 +369,14 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
 
   /**
    * Test admin setting functionality for autoassignrole_user_selection.
-   * @see http://drupal.org/node/944974
+   * @see http://backdrop.org/node/944974
    */
   function testAdminUserSelectionSettings() {
     // Create a new user who can access the administration settings.
-    $this->drupalLogin($this->admin_user);
+    $this->backdropLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
-    $this->drupalGet('admin/config/people/autoassignrole/user');
+    $this->backdropGet('admin/config/people/autoassignrole/user');
     $this->assertField(
      'autoassignrole_user_selection',
      'The autoassignrole_user_selection field is accessible.'
@@ -384,7 +384,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
 
     // Set autoassignrole_user_selection to radio inputs.
     $edit['autoassignrole_user_selection'] = 0;
-    $this->drupalPost(
+    $this->backdropPost(
       'admin/config/people/autoassignrole/user',
       $edit,
       t('Save configuration')
@@ -392,14 +392,14 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
 
     // Verify autoassignrole_user_selection has set to radio.
     $this->assertEqual(
-      variable_get('autoassignrole_user_selection', -1),
+      config_get('autoassignrole', 'autoassignrole_user_selection'),
       0,
       'autoassignrole_user_selection has been set to radio/ checkbox'
     );
 
     // Set autoassignrole_user_selection to select box.
     $edit['autoassignrole_user_selection'] = 1;
-    $this->drupalPost(
+    $this->backdropPost(
       'admin/config/people/autoassignrole/user',
       $edit,
       t('Save configuration')
@@ -407,7 +407,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
 
     // Verify autoassignrole_user_selection has been set to select box.
     $this->assertEqual(
-      variable_get('autoassignrole_user_selection', -1),
+      config_get('autoassignrole', 'autoassignrole_user_selection'),
       1,
       'autoassignrole_user_selection has been set to select box'
     );
@@ -415,14 +415,14 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
 
   /**
    * Test admin setting functionality for autoassignrole_user_selection.
-   * @see http://drupal.org/node/944978
+   * @see http://backdrop.org/node/944978
    */
   function testAdminUserSelectionRequired() {
     // Create a new user who can access the administration settings.
-    $this->drupalLogin($this->admin_user);
+    $this->backdropLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
-    $this->drupalGet('admin/config/people/autoassignrole/user');
+    $this->backdropGet('admin/config/people/autoassignrole/user');
     $this->assertField(
      'autoassignrole_user_required',
      'The autoassignrole_user_required field is accessible.'
@@ -430,7 +430,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
 
     // Set autoassignrole_user_required to no.
     $edit['autoassignrole_user_required'] = 0;
-    $this->drupalPost(
+    $this->backdropPost(
       'admin/config/people/autoassignrole/user',
       $edit,
       t('Save configuration')
@@ -438,14 +438,14 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
 
     // Verify autoassignrole_user_required has set to no.
     $this->assertEqual(
-      variable_get('autoassignrole_user_required', -1),
+      config_get('autoassignrole', 'autoassignrole_user_required'),
       0,
       'autoassignrole_user_required has been set to radio'
     );
 
     // Set autoassignrole_user_required to yes.
     $edit['autoassignrole_user_required'] = 1;
-    $this->drupalPost(
+    $this->backdropPost(
       'admin/config/people/autoassignrole/user',
       $edit,
       t('Save configuration')
@@ -453,7 +453,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
 
     // Verify autoassignrole_user_required has been set to yes.
     $this->assertEqual(
-      variable_get('autoassignrole_user_required', -1),
+      config_get('autoassignrole', 'autoassignrole_user_required'),
       1,
       'autoassignrole_user_required has been set to select box'
     );
@@ -461,14 +461,14 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
 
   /**
    * Test admin setting functionality for autoassignrole_user_selection.
-   * @see http://drupal.org/node/944988
+   * @see http://backdrop.org/node/944988
    */
   function testAdminUserSortSettings() {
     // Create a new user who can access the administration settings.
-    $this->drupalLogin($this->admin_user);
+    $this->backdropLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
-    $this->drupalGet('admin/config/people/autoassignrole/user');
+    $this->backdropGet('admin/config/people/autoassignrole/user');
     $this->assertField(
      'autoassignrole_user_sort',
      'The autoassignrole_user_sort field is accessible.'
@@ -476,7 +476,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
 
     // Set autoassignrole_user_sort to radio SORT_ASC.
     $edit['autoassignrole_user_sort'] = 'SORT_ASC';
-    $this->drupalPost(
+    $this->backdropPost(
       'admin/config/people/autoassignrole/user',
       $edit,
       t('Save configuration')
@@ -484,14 +484,14 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
 
     // Verify autoassignrole_user_sort has set to SORT_ASC
     $this->assertEqual(
-      variable_get('autoassignrole_user_sort', -1),
+      config_get('autoassignrole', 'autoassignrole_user_sort'),
       'SORT_ASC',
       'autoassignrole_user_selection has been set to SORT_ASC'
     );
 
     // Set autoassignrole_user_sort to SORT_DESC.
     $edit['autoassignrole_user_sort'] = 'SORT_DESC';
-    $this->drupalPost(
+    $this->backdropPost(
       'admin/config/people/autoassignrole/user',
       $edit,
       t('Save configuration')
@@ -499,7 +499,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
 
     // Verify autoassignrole_user_sort has been set to 'SORT_DESC'
     $this->assertEqual(
-      variable_get('autoassignrole_user_sort', -1),
+      config_get('autoassignrole', 'autoassignrole_user_sort'),
       'SORT_DESC',
       'autoassignrole_user_sort has been set to SORT_DESC'
     );
@@ -507,14 +507,14 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
 
   /**
    * Test admin setting functionality for autoassignrole_user_description.
-   * @see http://drupal.org/node/945024
+   * @see http://backdrop.org/node/945024
    */
   function testAdminUserDescriptionSettings() {
     // Create a new user who can access the administration settings.
-    $this->drupalLogin($this->admin_user);
+    $this->backdropLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
-    $this->drupalGet('admin/config/people/autoassignrole/user');
+    $this->backdropGet('admin/config/people/autoassignrole/user');
     $this->assertField(
      'autoassignrole_user_description[value]',
      'The autoassignrole_user_description field is accessible.'
@@ -523,7 +523,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
     // Set autoassignrole_user_description to a random string.
     $random_string = $this->randomName();
     $edit['autoassignrole_user_description[value]'] = $random_string;
-    $this->drupalPost(
+    $this->backdropPost(
       'admin/config/people/autoassignrole/user',
       $edit,
       t('Save configuration')
@@ -540,14 +540,14 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
 
   /**
    * Test admin setting functionality for autoassignrole_user_selection.
-   * @see http://drupal.org/node/945010
+   * @see http://backdrop.org/node/945010
    */
   function testAdminUserFieldsetTitleSettings() {
     // Create a new user who can access the administration settings.
-    $this->drupalLogin($this->admin_user);
+    $this->backdropLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
-    $this->drupalGet('admin/config/people/autoassignrole/user');
+    $this->backdropGet('admin/config/people/autoassignrole/user');
     $this->assertField(
      'autoassignrole_user_fieldset_title',
      'The autoassignrole_user_fieldset_title field is accessible.'
@@ -556,7 +556,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
     // Set autoassignrole_user_fieldset_title to a random string.
     $random_string = $this->randomName();
     $edit['autoassignrole_user_fieldset_title'] = $random_string;
-    $this->drupalPost(
+    $this->backdropPost(
       'admin/config/people/autoassignrole/user',
       $edit,
       t('Save configuration')
@@ -564,7 +564,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
 
     // Verify autoassignrole_user_fieldset_title has been saved.
     $this->assertEqual(
-      variable_get('autoassignrole_user_fieldset_title', -1),
+      config_get('autoassignrole', 'autoassignrole_user_fieldset_title'),
       $random_string,
       'autoassignrole_user_fieldset_title has been set to random string'
     );
@@ -572,14 +572,14 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
 
   /**
    * Test admin setting functionality for autoassignrole_user_title.
-   * @see http://drupal.org/node/945016
+   * @see http://backdrop.org/node/945016
    */
   function testAdminUserTitle() {
     // Create a new user who can access the administration settings.
-    $this->drupalLogin($this->admin_user);
+    $this->backdropLogin($this->admin_user);
 
     // Check that the user can see the admin settings page.
-    $this->drupalGet('admin/config/people/autoassignrole/user');
+    $this->backdropGet('admin/config/people/autoassignrole/user');
     $this->assertField(
      'autoassignrole_user_title',
      'The autoassignrole_user_title field is accessible.'
@@ -588,7 +588,7 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
     // Set autoassignrole_user_title to a random string.
     $random_string = $this->randomName();
     $edit['autoassignrole_user_title'] = $random_string;
-    $this->drupalPost(
+    $this->backdropPost(
       'admin/config/people/autoassignrole/user',
       $edit,
       t('Save configuration')
@@ -596,14 +596,14 @@ class AutoassignroleAdminUserTestCase extends DrupalWebTestCase {
 
     // Verify autoassignrole_user_title has been saved.
     $this->assertEqual(
-      variable_get('autoassignrole_user_title', -1),
+      config_get('autoassignrole', 'autoassignrole_user_title'),
       $random_string,
       'autoassignrole_user_title has been set to random string'
     );
   }
 }
 
-class AuthassignroleRolePerPathTestCase extends DrupalWebTestCase {
+class AuthassignroleRolePerPathTestCase extends BackdropWebTestCase {
 
   protected $page_title;
 
@@ -614,7 +614,7 @@ class AuthassignroleRolePerPathTestCase extends DrupalWebTestCase {
    */
   protected function createAarPage($specificRid = NULL) {
     // Check that the user can see the admin add page.
-    $this->drupalGet('admin/config/people/autoassignrole/pages/add');
+    $this->backdropGet('admin/config/people/autoassignrole/pages/add');
 
     // Verify that there are roles exposed.
     $role_keys = array_keys($this->roles);
@@ -641,7 +641,7 @@ class AuthassignroleRolePerPathTestCase extends DrupalWebTestCase {
     $edit['path'] = $this->page_path = 'test/register/' . $this->page_title;
 
     // Check each of our roles and submit the form.
-    $this->drupalPost(
+    $this->backdropPost(
       'admin/config/people/autoassignrole/pages/add',
       $edit,
       t('Add')
@@ -653,7 +653,7 @@ class AuthassignroleRolePerPathTestCase extends DrupalWebTestCase {
 }
 
 /**
- * Extend the DrupalWebTestCase.
+ * Extend the BackdropWebTestCase.
  */
 class AutoassignroleAdminRolePerPageTestCase extends AuthassignroleRolePerPathTestCase {
   protected $admin_user;
@@ -668,15 +668,15 @@ class AutoassignroleAdminRolePerPageTestCase extends AuthassignroleRolePerPathTe
 
   function setUp() {
     parent::setUp('autoassignrole');
-    $this->admin_user = $this->drupalCreateUser(array(
+    $this->admin_user = $this->backdropCreateUser(array(
       'administer autoassignrole',
       'access administration pages',
     ));
     $permissions = array('access content');
-    $this->drupalCreateRole($permissions);
+    $this->backdropCreateRole($permissions);
 
     $this->roles = user_roles(TRUE);
-    unset($this->roles[DRUPAL_AUTHENTICATED_RID]);
+    unset($this->roles[BACKDROP_AUTHENTICATED_ROLE]);
   }
 
   /**
@@ -685,20 +685,20 @@ class AutoassignroleAdminRolePerPageTestCase extends AuthassignroleRolePerPathTe
    */
   function testAutoConfigAarBlock() {
     // Create a new user who can access the administration settings.
-    $this->drupalLogin($this->admin_user);
+    $this->backdropLogin($this->admin_user);
 
     // Check that the user can see a link to the auto settings.
-    $this->drupalGet('admin/config/people/autoassignrole');
-    $this->assertLink('Per Role Pages', 0, 'Allow user to define registration path to be assigned role(s) on admin/config/people/autoassignrole');
+    $this->backdropGet('admin/config/people/autoassignrole');
+    $this->assertLink('Per Role Pages', 'Allow user to define registration path to be assigned role(s) on admin/config/people/autoassignrole');
   }
 
   /**
    * Test admin functionality of creating a role per path.
-   * @see https://www.drupal.org/node/971320
+   * @see https://www.backdrop.org/node/971320
    */
   function testAutoRolePerPageAdd() {
     // Create a new user who can access the administration settings.
-    $this->drupalLogin($this->admin_user);
+    $this->backdropLogin($this->admin_user);
 
     // Check that the user can see the admin add page.
     $this->createAarPage();
@@ -711,7 +711,7 @@ class AutoassignroleAdminRolePerPageTestCase extends AuthassignroleRolePerPathTe
     $this->assertFieldByName('path', 'test/register/' . $this->page_title, 'Role per path path is correct');
 
     // Go back to the list of AAR pages.
-    $this->drupalGet('admin/config/people/autoassignrole/pages');
+    $this->backdropGet('admin/config/people/autoassignrole/pages');
 
     // Click to delete link.
     $this->clickLink(t('Delete'));
@@ -723,9 +723,9 @@ class AutoassignroleAdminRolePerPageTestCase extends AuthassignroleRolePerPathTe
 
 
 /**
- * Extend the DrupalWebTestCase.
+ * Extend the BackdropWebTestCase.
  */
-class AutoassignroleUserCreationTestCase extends DrupalWebTestCase {
+class AutoassignroleUserCreationTestCase extends BackdropWebTestCase {
   protected $admin_user;
 
   public static function getInfo() {
@@ -739,24 +739,24 @@ class AutoassignroleUserCreationTestCase extends DrupalWebTestCase {
   function setUp() {
     parent::setUp('autoassignrole');
     // Create a random role.
-    $this->rid = $this->drupalCreateRole(array(), $this->randomName());
+    $this->rid = $this->backdropCreateRole(array(), $this->randomName());
     $this->roles = user_roles(TRUE);
-    unset($this->roles[DRUPAL_AUTHENTICATED_RID]);
+    unset($this->roles[BACKDROP_AUTHENTICATED_ROLE]);
   }
 
   /**
    * Test functionality for programmatic user creation.
-   * @see http://drupal.org/node/944864
+   * @see http://backdrop.org/node/944864
    */
   function testUserCreateAPI() {
     // Enable auto role assignment.
-    variable_set('autoassignrole_auto_active', 1);
+    variable_set('autoassignrole_auto_active');
     // Enable auto assignment for admin users.
-    variable_set('autoassignrole_admin_active', 1);
+    variable_set('autoassignrole_admin_active');
     // Configure to assign our random role.
     variable_set('autoassignrole_auto_roles', array($this->rid => $this->rid));
     // Create a test user.
-    $this->test_user = $this->drupalCreateUser();
+    $this->test_user = $this->backdropCreateUser();
     // Verify test user has been assigned role.
     $this->assertTRUE(
       array_key_exists($this->rid, $this->test_user->roles),
@@ -766,15 +766,15 @@ class AutoassignroleUserCreationTestCase extends DrupalWebTestCase {
 
   /**
    * Test that auto roles are only assigned when they are enabled.
-   * @see http://drupal.org/node/971622
+   * @see http://backdrop.org/node/971622
    */
   function testUserAutoActiveAPI() {
     // Enable auto role assignment.
-    variable_set('autoassignrole_auto_active', 0);
+    variable_set('autoassignrole_auto_active');
     // Configure to assign our random role.
     variable_set('autoassignrole_auto_roles', array($this->rid => $this->rid));
     // Create a test user.
-    $this->test_user = $this->drupalCreateUser();
+    $this->test_user = $this->backdropCreateUser();
     // Verify test user has been assigned role.
     $this->assertFALSE(
       array_key_exists($this->rid, $this->test_user->roles),
@@ -784,7 +784,7 @@ class AutoassignroleUserCreationTestCase extends DrupalWebTestCase {
 }
 
 /**
- * Extend the DrupalWebTestCase.
+ * Extend the BackdropWebTestCase.
  */
 class AutoassignroleUserCreationRolePerPathTestCase extends AuthassignroleRolePerPathTestCase {
   protected $rid;
@@ -802,7 +802,7 @@ class AutoassignroleUserCreationRolePerPathTestCase extends AuthassignroleRolePe
 
   function setUp() {
     parent::setUp('autoassignrole');
-    $this->admin_user = $this->drupalCreateUser(array(
+    $this->admin_user = $this->backdropCreateUser(array(
       'administer permissions',
       'administer users',
       'administer autoassignrole',
@@ -810,28 +810,28 @@ class AutoassignroleUserCreationRolePerPathTestCase extends AuthassignroleRolePe
     ));
     // Create a random role.
     $this->roleName = $this->randomName();
-    $this->rid = $this->drupalCreateRole(array(), $this->roleName);
+    $this->rid = $this->backdropCreateRole(array(), $this->roleName);
     $this->roles = user_roles(TRUE);
-    unset($this->roles[DRUPAL_AUTHENTICATED_RID]);
+    unset($this->roles[BACKDROP_AUTHENTICATED_ROLE]);
   }
 
   /**
    * Test the user registration based on a path.
-   * @see https://www.drupal.org/node/971320
+   * @see https://www.backdrop.org/node/971320
    */
   function testUserAutoRegistrationByPath() {
     // enable clean urls.
-    variable_set('clean_url', 1);
+    variable_set('clean_url');
 
     // Login as the admin user.
-    $this->drupalLogin($this->admin_user);
+    $this->backdropLogin($this->admin_user);
     // Create the AAR registration page to assign to the new role.
     $this->createAarPage($this->rid);
     // Logout as an admin.
-    $this->drupalLogout();
+    $this->backdropLogout();
 
     // Register as a new user with the new path.
-    $this->drupalGet($this->page_path);
+    $this->backdropGet($this->page_path);
 
     // Fill in the register form.
     $testUserName = 'testUser-' . $this->randomName();
@@ -839,14 +839,14 @@ class AutoassignroleUserCreationRolePerPathTestCase extends AuthassignroleRolePe
     $form['mail'] = 'test@test.com';
 
     // Check each of our roles and submit the form.
-    $this->drupalPost($this->page_path, $form, t('Create new account'));
+    $this->backdropPost($this->page_path, $form, t('Create new account'));
     // Logout as user registered user.
-    $this->drupalLogout();
+    $this->backdropLogout();
 
     // Login as admin user to check new users role.
-    $this->drupalLogin($this->admin_user);
+    $this->backdropLogin($this->admin_user);
     // Get the list of users.
-    $this->drupalGet('admin/people');
+    $this->backdropGet('admin/people');
 
     // Get the user span details.
     $userSpans = $this->xpath('//span[@class="username"]');

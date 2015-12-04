@@ -10,7 +10,7 @@
  *
  * This function is often a destination for these blocks.
  * For example, 'admin/structure/types' needs to have a destination to be valid
- * in the Drupal menu system, but too much information there might be
+ * in the Backdrop menu system, but too much information there might be
  * hidden, so we supply the contents of the block.
  *
  * @return String
@@ -31,13 +31,13 @@ function autoassignrole_admin_block_page() {
  * Form builder; The settings form for automatic role assignment.
  *
  * @ingroup forms
- * @see system_settings_form()
  */
 function autoassignrole_auto_settings() {
+  $config = config('autoassignrole.settings');
   $form['autoassignrole_auto_active'] = array(
     '#type' => 'radios',
     '#title' => t('Automatic role assignment'),
-    '#default_value' => variable_get('autoassignrole_auto_active', 0),
+    '#default_value' => $config->get('autoassignrole_auto_active'),
     '#description' => t('Automatic role assignment occurs when the user first logins to the account. This happens without the users knowledge. Set to Enabled to allow this functionality or Disabled to not allow.'),
     '#options' => array(1 => t('Enabled'), 0 => t('Disabled')),
   );
@@ -45,7 +45,7 @@ function autoassignrole_auto_settings() {
   $form['autoassignrole_admin_active'] = array(
     '#type' => 'radios',
     '#title' => t('Automatic role assignment for admin created accounts'),
-    '#default_value' => variable_get('autoassignrole_admin_active', 0),
+    '#default_value' => $config->get('autoassignrole_admin_active'),
     '#description' => t('Automatic role assignment occurs when the user first logins to the account. This happens without the users knowledge. Set to Enabled to allow this functionality or Disabled to not allow.'),
     '#options' => array(1 => t('Enabled'), 0 => t('Disabled')),
     '#states' => array(
@@ -56,16 +56,20 @@ function autoassignrole_auto_settings() {
   );
 
   // We can disregard the authenticated user role since it is assigned to each
-  // user by Drupal.
+  // user by Backdrop.
   $roles = user_roles(TRUE);
-  unset($roles[DRUPAL_AUTHENTICATED_RID]);
+  unset($roles[BACKDROP_AUTHENTICATED_ROLE]);
+  $form['roles'] = array(
+    '#type' => 'value',
+    '#value' => isset($roles),
+  );
 
   if ($roles) {
     $form['autoassignrole_auto_roles'] = array(
       '#type' => 'checkboxes',
       '#title' => t('Roles'),
-      '#default_value' => variable_get('autoassignrole_auto_roles', array()),
-      '#description' => t('Check the specific roles the user will automatically be assigned to when created by an administrator or through the new user registration process. The Authenticated User role is automatically assigned by Drupal core and can not be edited.'),
+      '#default_value' => $config->get('autoassignrole_auto_roles'),
+      '#description' => t('Check the specific roles the user will automatically be assigned to when created by an administrator or through the new user registration process. The Authenticated User role is automatically assigned by Backdrop core and can not be edited.'),
       '#options' => $roles,
       '#states' => array(
         'visible' => array(
@@ -75,35 +79,50 @@ function autoassignrole_auto_settings() {
     );
   }
 
-  return system_settings_form($form);
+  return $form;
+}
+
+function autoassignrole_auto_settings_submit($form, &$form_state) {
+  $config = config('autoassignrole.settings');
+  $config->set('autoassignrole_auto_active', $form_state['values']['autoassignrole_auto_active']);
+  $config->set('autoassignrole_admin_active', $form_state['values']['autoassignrole_admin_active']);
+  if ($form_state['values']['roles']){
+    $config->set('autoassignrole_auto_roles', $form_state['values']['autoassignrole_auto_roles']);
+  }
+  $config->save();
+  backdrop_set_message(t('The configuration options have been saved.'));
 }
 
 /**
  * Form builder; The settings form for user selectable role assignment.
  *
  * @ingroup forms
- * @see system_settings_form()
  */
 function autoassignrole_user_settings() {
+  $config = config('autoassignrole.settings');
   $form['autoassignrole_user_active'] = array(
     '#type' => 'radios',
     '#title' => t('User role assignment'),
-    '#default_value' => variable_get('autoassignrole_user_active', 0),
+    '#default_value' => $config->get('autoassignrole_user_active'),
     '#description' => t('Toggles allowing end users to select roles when creating their accounts.'),
     '#options' => array(1 => t('Enabled'), 0 => t('Disabled')),
   );
 
   // We can disregard the authenticated user role since it is assigned to each
-  // user by Drupal.
+  // user by Backdrop.
   $roles = user_roles(TRUE);
-  unset($roles[DRUPAL_AUTHENTICATED_RID]);
+  unset($roles[BACKDROP_AUTHENTICATED_ROLE]);
+  $form['roles'] = array(
+    '#type' => 'value',
+    '#value' => isset($roles),
+  );
 
   if ($roles) {
     $form['autoassignrole_user_roles'] = array(
       '#type' => 'checkboxes',
       '#title' => t('Roles'),
-      '#default_value' => variable_get('autoassignrole_user_roles', array()),
-      '#description' => t('Check the specific roles the user will have the option of choosing. The Authenticated User role is automatically assigned by Drupal core and can not be edited.'),
+      '#default_value' => $config->get('autoassignrole_user_roles'),
+      '#description' => t('Check the specific roles the user will have the option of choosing. The Authenticated User role is automatically assigned by Backdrop core and can not be edited.'),
       '#options' => $roles,
       '#states' => array(
         'visible' => array(
@@ -116,7 +135,7 @@ function autoassignrole_user_settings() {
   $form['autoassignrole_user_multiple'] = array(
     '#type' => 'radios',
     '#title' => t('User role selection'),
-    '#default_value' => variable_get('autoassignrole_user_multiple', 0),
+    '#default_value' => $config->get('autoassignrole_user_multiple'),
     '#description' => t('Should the end user be allowed to choose a single role or can they choose multiple roles?'),
     '#options' => array(0 => t('Single role'), 1 => t('Multiple roles')),
     '#states' => array(
@@ -129,7 +148,7 @@ function autoassignrole_user_settings() {
   $form['autoassignrole_user_selection'] = array(
     '#type' => 'radios',
     '#title' => t('Selection method'),
-    '#default_value' => variable_get('autoassignrole_user_selection', AUTOASSIGNROLE_ELEMENT_RADIO_CHECKBOX),
+    '#default_value' => $config->get('autoassignrole_user_selection'),
     '#description' => t('The type of form elements the end user will be presented with.'),
     '#options' => array(
       AUTOASSIGNROLE_ELEMENT_RADIO_CHECKBOX => t('Radio Buttons/Checkboxes'),
@@ -145,7 +164,7 @@ function autoassignrole_user_settings() {
   $form['autoassignrole_user_required'] = array(
     '#type' => 'radios',
     '#title' => t('Required'),
-    '#default_value' => variable_get('autoassignrole_user_required', 0),
+    '#default_value' => $config->get('autoassignrole_user_required'),
     '#description' => t('Should the end user be required to choose a role?'),
     '#options' => array(0 => t('No'), 1 => t('Yes')),
     '#states' => array(
@@ -158,7 +177,7 @@ function autoassignrole_user_settings() {
   $form['autoassignrole_user_sort'] = array(
     '#type' => 'radios',
     '#title' => t('Sorting'),
-    '#default_value' => variable_get('autoassignrole_user_sort', 'SORT_ASC'),
+    '#default_value' => $config->get('autoassignrole_user_sort'),
     '#description' => t('Default sort order of roles the user will see.'),
     '#options' => array(
       'SORT_ASC' => t('Ascending'),
@@ -190,7 +209,7 @@ function autoassignrole_user_settings() {
     '#type' => 'textfield',
     '#title' => t('User Role Fieldset Title'),
     '#description' => t('The title of the fieldset that contains role options.'),
-    '#default_value' => variable_get('autoassignrole_user_fieldset_title', t('User Roles')),
+    '#default_value' => $config->get('autoassignrole_user_fieldset_title'),
     '#size' => 60,
     '#maxlength' => 128,
     '#states' => array(
@@ -204,7 +223,7 @@ function autoassignrole_user_settings() {
     '#type' => 'textfield',
     '#title' => t('User Role Title'),
     '#description' => t('The title of the field that contains the role options the end user sees during registration.'),
-    '#default_value' => variable_get('autoassignrole_user_title', t('Role')),
+    '#default_value' => $config->get('autoassignrole_user_title'),
     '#size' => 60,
     '#maxlength' => 128,
     '#required' => FALSE,
@@ -215,7 +234,24 @@ function autoassignrole_user_settings() {
     ),
   );
 
-  return system_settings_form($form);
+  return $form;
+}
+
+function autoassignrole_user_settings_submit($form, &$form_state) {
+  $config = config('autoassignrole.settings');
+  $config->set('autoassignrole_user_active', $form_state['values']['autoassignrole_user_active']);
+  $config->set('autoassignrole_user_multiple', $form_state['values']['autoassignrole_user_multiple']);
+  $config->set('autoassignrole_user_selection', $form_state['values']['autoassignrole_user_selection']);
+  $config->set('autoassignrole_user_required', $form_state['values']['autoassignrole_user_required']);
+  $config->set('autoassignrole_user_sort', $form_state['values']['autoassignrole_user_sort']);
+  $config->set('autoassignrole_user_description', $form_state['values']['autoassignrole_user_description']);
+  $config->set('autoassignrole_user_fieldset_title', $form_state['values']['autoassignrole_user_fieldset_title']);
+  $config->set('autoassignrole_user_title', $form_state['values']['autoassignrole_user_title']);
+  if ($form_state['values']['roles']){
+    $config->set('autoassignrole_user_roles', $form_state['values']['autoassignrole_user_roles']);
+  }
+  $config->save();
+  backdrop_set_message(t('The configuration options have been saved.'));
 }
 
 /**
@@ -225,7 +261,7 @@ function autoassignrole_user_settings() {
  */
 function autoassignrole_page_form($form, &$form_state, $op = 'add', $id = 0) {
   $roles = user_roles(TRUE);
-  unset($roles[DRUPAL_AUTHENTICATED_RID]);
+  unset($roles[BACKDROP_AUTHENTICATED_ROLE]);
 
   $form = array();
 
@@ -282,7 +318,7 @@ function autoassignrole_page_form($form, &$form_state, $op = 'add', $id = 0) {
   $form['rid_page']['path'] = array(
     '#type' => 'textfield',
     '#title' => t('Page Path'),
-    '#description' => t('Enter the Drupal path for the registration page for this role. This is a relative path based on your Drupal installation.'),
+    '#description' => t('Enter the Backdrop path for the registration page for this role. This is a relative path based on your Backdrop installation.'),
     '#size' => 60,
     '#required' => TRUE,
     '#default_value' => isset($page->path) ? $page->path : "",
@@ -299,7 +335,7 @@ function autoassignrole_page_form($form, &$form_state, $op = 'add', $id = 0) {
   $form['rid_page']['display'] = array(
     '#type' => 'select',
     '#title' => t('Display type'),
-    '#description' => t('Choose the way you would like these pages to be displayed.<br /><em>Standard</em> is equivalent to the core Drupal log in/ registration form, with tabs along the top.<br /><em>Individual</em> is a separate page without tabs.'),
+    '#description' => t('Choose the way you would like these pages to be displayed.<br /><em>Standard</em> is equivalent to the core Backdrop log in/ registration form, with tabs along the top.<br /><em>Individual</em> is a separate page without tabs.'),
     '#options' => array(
       AUTOASSIGNROLE_PAGE_DISPLAY_STANDARD => t('Standard'),
       AUTOASSIGNROLE_PAGE_DISPLAY_INDIVIDUAL => t('Individual'),
@@ -333,7 +369,7 @@ function autoassignrole_page_form_validate($form_id, &$form_state) {
         ->fields('m', array('mlid'))
         ->condition('link_path', $path, 'like');
       $count = $query->countQuery()->execute()->fetchField();
-      if (drupal_lookup_path('source', $path) || $count > 0) {
+      if (backdrop_lookup_path('source', $path) || $count > 0) {
         // The menu item exists so need to check if the path has something other
         // than autoassign_role_path registered otherwise throw an error.
         $menu_item = menu_get_item($path);
@@ -374,11 +410,11 @@ function autoassignrole_page_form_submit($form_id, &$form_state) {
 
   if ($return) {
     menu_rebuild();
-    drupal_set_message(t('Successfully @operation Page @page', array('@operation' => $operation, '@page' => $page['title'])));
-    drupal_goto('admin/config/people/autoassignrole/pages');
+    backdrop_set_message(t('Successfully @operation Page @page', array('@operation' => $operation, '@page' => $page['title'])));
+    backdrop_goto('admin/config/people/autoassignrole/pages');
   }
   else {
-    drupal_set_message(t('Unfortunately there has been an error and this page could not be %op', array('%op' => drupal_strtolower($operation))), 'error');
+    backdrop_set_message(t('Unfortunately there has been an error and this page could not be %op', array('%op' => backdrop_strtolower($operation))), 'error');
   }
 }
 
@@ -397,7 +433,7 @@ function autoassignrole_add_page($page) {
     $return_value = db_insert('autoassignrole_page')->fields($page)->execute();
   }
   catch (Exception $e) {
-    drupal_set_message(t('db_insert failed. Message = %message, query = %query', array('%message' => $e->getMessage(), '%query' => $e->query_string)), 'error');
+    backdrop_set_message(t('db_insert failed. Message = %message, query = %query', array('%message' => $e->getMessage(), '%query' => $e->query_string)), 'error');
   }
   return $return_value;
 }
@@ -422,7 +458,7 @@ function autoassignrole_update_page($page, $id) {
       ->execute();
   }
   catch (Exception $e) {
-    drupal_set_message(t('db_update failed. Message = %message, query = %query', array('%message' => $e->getMessage(), '%query' => $e->query_string)), 'error');
+    backdrop_set_message(t('db_update failed. Message = %message, query = %query', array('%message' => $e->getMessage(), '%query' => $e->query_string)), 'error');
   }
   return $return_value;
 }
@@ -448,7 +484,7 @@ function autoassignrole_page_delete_confirm_submit($form, &$form_state) {
     ->condition('rid_page_id', (int) $form_state['values']['page_id'])
     ->execute();
   menu_rebuild();
-  drupal_set_message(t('Successfully deleted page'));
+  backdrop_set_message(t('Successfully deleted page'));
   $form_state['redirect'] = 'admin/config/people/autoassignrole/pages';
 }
 

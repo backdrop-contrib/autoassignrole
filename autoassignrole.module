@@ -48,7 +48,7 @@ function autoassignrole_menu() {
     'title' => 'Automatic',
     'description' => 'Configure which role(s) are automatically assigned on user creation.',
     'access arguments' => array('administer autoassignrole'),
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('autoassignrole_auto_settings'),
     'file' => 'autoassignrole.admin.inc',
   );
@@ -56,7 +56,7 @@ function autoassignrole_menu() {
     'title' => 'User choice',
     'description' => 'Configure the ability for an end user to choose their own roles during registration.',
     'access arguments' => array('administer autoassignrole'),
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('autoassignrole_user_settings'),
     'file' => 'autoassignrole.admin.inc',
   );
@@ -70,7 +70,7 @@ function autoassignrole_menu() {
   $items['admin/config/people/autoassignrole/pages/add'] = array(
     'title' => 'Add Auto Assign Role Page',
     'access arguments' => array('administer autoassignrole'),
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('autoassignrole_page_form', 'add'),
     'type' => MENU_LOCAL_ACTION,
     'file' => 'autoassignrole.admin.inc',
@@ -78,14 +78,14 @@ function autoassignrole_menu() {
   $items['admin/config/people/autoassignrole/pages/edit/%'] = array(
     'title' => 'Edit Auto Assign Role Page',
     'access arguments' => array('administer autoassignrole'),
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('autoassignrole_page_form', 'edit', 6),
     'file' => 'autoassignrole.admin.inc',
   );
   $items['admin/config/people/autoassignrole/pages/delete/%'] = array(
     'title' => 'Delete Auto Assign Role Page',
     'access arguments' => array('administer autoassignrole'),
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('autoassignrole_page_delete_confirm', 6),
     'file' => 'autoassignrole.admin.inc',
   );
@@ -181,12 +181,13 @@ function autoassignrole_get_active_path_rid() {
  * Implements hook_user_presave().
  */
 function autoassignrole_user_presave(&$edit, $account, $category) {
-  // Use case http://drupal.org/node/971622
+  $config = config('autoassignrole.settings');
+  // Use case http://backdrop.org/node/971622
   // Make sure we only assign roles automatically when enabled to do so.
-  if (variable_get('autoassignrole_auto_active', 0) || variable_get("autoassignrole_user_active", 0)
-    || (variable_get('autoassignrole_admin_active', 0) && user_access('administer users'))
+  if ($config->get('autoassignrole_auto_active') || $config->get("autoassignrole_user_active")
+    || ($config->get('autoassignrole_admin_active') && user_access('administer users'))
     || autoassignrole_get_active_path_rid()) {
-    // Use case http://drupal.org/node/944864
+    // Use case http://backdrop.org/node/944864
     // Only assign roles if this is a new account.
     if (isset($account->is_new) && !empty($account->is_new)) {
       // Get the existing user roles with the exception of the anonymous role.
@@ -194,13 +195,13 @@ function autoassignrole_user_presave(&$edit, $account, $category) {
       $roles_to_add = array();
 
       // Add in automatic roles.
-      if ((variable_get('autoassignrole_auto_active', 0) && !user_access('administer users'))
-        || (variable_get('autoassignrole_admin_active', 0) && user_access('administer users'))) {
-        $roles_to_add += array_intersect_key($user_roles, array_filter(variable_get('autoassignrole_auto_roles', array())));
+      if (($config->get('autoassignrole_auto_active') && !user_access('administer users'))
+        || ($config->get('autoassignrole_admin_active') && user_access('administer users'))) {
+        $roles_to_add += array_intersect_key($user_roles, array_filter($config->get('autoassignrole_auto_roles')));
       }
 
       // Add in user selected roles if any.
-      if (variable_get("autoassignrole_user_active", 0) && !empty($edit['user_roles'])) {
+      if ($config->get("autoassignrole_user_active") && !empty($edit['user_roles'])) {
         // Value is a single, convert to array.
         if (!is_array($edit['user_roles'])) {
           $edit['user_roles'] = array($edit['user_roles'] => $edit['user_roles']);
@@ -229,33 +230,34 @@ function autoassignrole_user_presave(&$edit, $account, $category) {
  * Implements hook_form_FORM_ID_alter() for user_register_form().
  */
 function autoassignrole_form_user_register_form_alter(&$form, &$form_state) {
-  if (variable_get("autoassignrole_user_active", 0) && !user_access('administer users')
+  $config = config('autoassignrole.settings');
+  if ($config->get("autoassignrole_user_active") && !user_access('administer users')
     && !autoassignrole_get_active_path_rid()) {
 
     // Get a list of valid roles that can be selected.
-    $roles = array_intersect_key(user_roles(TRUE), array_filter(variable_get('autoassignrole_user_roles', array())));
+    $roles = array_intersect_key(user_roles(TRUE), array_filter($config->get('autoassignrole_user_roles')));
 
     if ($roles) {
       $form['autoassignrole_user'] = array(
         '#type' => 'fieldset',
-        '#title' => filter_xss(variable_get('autoassignrole_user_fieldset_title', t('User Roles'))),
+        '#title' => filter_xss($config->get('autoassignrole_user_fieldset_title')),
         '#collapsible' => FALSE,
         '#collapsed' => FALSE,
       );
 
       // Sort the roles.
-      if (variable_get('autoassignrole_user_sort', 'SORT_ASC') == 'SORT_ASC') {
+      if ($config->get('autoassignrole_user_sort') == 'SORT_ASC') {
         asort($roles);
       }
-      elseif (variable_get('autoassignrole_user_sort', 'SORT_DESC') == 'SORT_DESC') {
+      elseif ($config->get('autoassignrole_user_sort') == 'SORT_DESC') {
         arsort($roles);
       }
       else {
-        drupal_sort_weight($roles, $roles);
+        backdrop_sort_weight($roles, $roles);
       }
 
-      $multiple = variable_get('autoassignrole_user_multiple', 0);
-      $user_selection = variable_get('autoassignrole_user_selection', AUTOASSIGNROLE_ELEMENT_RADIO_CHECKBOX);
+      $multiple = $config->get('autoassignrole_user_multiple');
+      $user_selection = $config->get('autoassignrole_user_selection');
 
       $type = 'select';
       if ($user_selection == AUTOASSIGNROLE_ELEMENT_RADIO_CHECKBOX) {
@@ -263,7 +265,7 @@ function autoassignrole_form_user_register_form_alter(&$form, &$form_state) {
       }
 
       // If not multiple + not required + select box, need a none selection.
-      if (!$multiple && !variable_get('autoassignrole_user_required', 0) && $type == 'select') {
+      if (!$multiple && !$config->get('autoassignrole_user_required') && $type == 'select') {
         $roles = array(0 => t('None')) + $roles;
       }
 
@@ -273,10 +275,10 @@ function autoassignrole_form_user_register_form_alter(&$form, &$form_state) {
       // Add in the element.
       $form['autoassignrole_user']['user_roles'] = array(
         '#type' => $type,
-        '#title' => filter_xss(variable_get('autoassignrole_user_title', t('Role'))),
+        '#title' => filter_xss($config->get('autoassignrole_user_title')),
         '#options' => $roles,
         '#description' => filter_xss_admin($autoassignrole_user_description['value']),
-        '#required' => variable_get('autoassignrole_user_required', 0),
+        '#required' => $config->get('autoassignrole_user_required'),
         '#multiple' => $multiple,
       );
     }
@@ -287,7 +289,7 @@ function autoassignrole_form_user_register_form_alter(&$form, &$form_state) {
  * Implements hook_form_BASE_FORM_ID_alter().
  */
 function autoassignrole_form_autoassignrole_user_settings_alter(&$form, &$form_state, $form_id) {
-  $form['#attached']['js'][] = drupal_get_path('module', 'autoassignrole') . '/autoassignrole.js';
+  $form['#attached']['js'][] = backdrop_get_path('module', 'autoassignrole') . '/autoassignrole.js';
 }
 
 /**
@@ -345,7 +347,7 @@ function _autoassignrole_get_user_description() {
     'format' => filter_default_format(),
   );
 
-  return variable_get('autoassignrole_user_description', $defaults);
+  return config_get('autoassignrole.settings', 'autoassignrole_user_description');
 }
 
 /**
@@ -374,5 +376,5 @@ function autoassignrole_set_user_selectable_roles($role_names) {
     }
     $rids[$role->rid] = $role->rid;
   }
-  variable_set('autoassignrole_user_roles', $rids);
+  config_set('autoassignrole.settings', 'autoassignrole_user_roles', $rids);
 }

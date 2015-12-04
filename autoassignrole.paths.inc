@@ -8,13 +8,13 @@
  * password pages for a particular set of roles. The menu callback arguments
  * for these pages are defined here.
  *
- * These functions simply call the standard user forms from Drupal core, the
+ * These functions simply call the standard user forms from Backdrop core, the
  * reason we wrap them like this is so that we can detect when one of our
  * role-specific pages are being called rather than the default ones.
  */
 
 // We require this file from the user module to get the user_pass form.
-require_once drupal_get_path('module', 'user') . '/user.pages.inc';
+require_once backdrop_get_path('module', 'user') . '/user.pages.inc';
 
 /**
  * Loads the user registration form.
@@ -34,7 +34,7 @@ require_once drupal_get_path('module', 'user') . '/user.pages.inc';
  * @see autoassignrole_get_active_path_rid()
  */
 function autoassignrole_register($rid) {
-  $output = drupal_get_form('user_register_form');
+  $output = backdrop_get_form('user_register_form');
   return $output;
 }
 
@@ -42,7 +42,7 @@ function autoassignrole_register($rid) {
  * Loads the user login form.
  */
 function autoassignrole_login() {
-  $output = drupal_get_form('user_login');
+  $output = backdrop_get_form('user_login');
   return $output;
 }
 
@@ -50,6 +50,6 @@ function autoassignrole_login() {
  * Loads the password reset form.
  */
 function autoassignrole_password() {
-  $output = drupal_get_form('user_pass');
+  $output = backdrop_get_form('user_pass');
   return $output;
 }
