@@ -171,6 +171,7 @@ function autoassignrole_menu() {
  */
 function autoassignrole_get_active_path_rid() {
   $item = menu_get_item();
+  dpm($item);
   if ($item['page_callback'] == 'autoassignrole_register') {
     return $item['page_arguments'][0];
   }
@@ -180,8 +181,9 @@ function autoassignrole_get_active_path_rid() {
 /**
  * Implements hook_user_presave().
  */
-function autoassignrole_user_presave(&$edit, $account, $category) {
+function autoassignrole_user_presave($account) {
   $config = config('autoassignrole.settings');
+  dpm($account);
   // Use case http://backdrop.org/node/971622
   // Make sure we only assign roles automatically when enabled to do so.
   if ($config->get('autoassignrole_auto_active') || $config->get("autoassignrole_user_active")
@@ -199,14 +201,16 @@ function autoassignrole_user_presave(&$edit, $account, $category) {
         || ($config->get('autoassignrole_admin_active') && user_access('administer users'))) {
         $roles_to_add += array_intersect_key($user_roles, array_filter($config->get('autoassignrole_auto_roles')));
       }
+  dpm($user_roles);
+  dpm(array_filter($config->get('autoassignrole_auto_roles')));
 
       // Add in user selected roles if any.
-      if ($config->get("autoassignrole_user_active") && !empty($edit['user_roles'])) {
+      if ($config->get("autoassignrole_user_active") && !empty($account->user_roles)) {
         // Value is a single, convert to array.
-        if (!is_array($edit['user_roles'])) {
-          $edit['user_roles'] = array($edit['user_roles'] => $edit['user_roles']);
+        if (!is_array($account->user_roles)) {
+          $account->user_roles = array($account->user_roles => $account->user_roles);
         }
-        $roles_to_add += array_intersect_key($user_roles, array_filter($edit['user_roles']));
+        $roles_to_add += array_intersect_key($user_roles, array_filter($account->user_roles));
       }
 
       // Add page-specific roles.
@@ -216,12 +220,13 @@ function autoassignrole_user_presave(&$edit, $account, $category) {
       }
 
       // Make sure the roles key exists.
-      if (!isset($edit['roles'])) {
-        $edit['roles'] = array();
+      if (!isset($account->roles)) {
+        $account->roles = array();
       }
+  dpm($roles_to_add);
 
       // Add in the new roles to override the current roles.
-      $edit['roles'] = $roles_to_add + $edit['roles'];
+      $account->roles = $roles_to_add + $account->roles;
     }
   }
 }
@@ -347,7 +352,10 @@ function _autoassignrole_get_user_description() {
     'format' => filter_default_format(),
   );
 
-  return config_get('autoassignrole.settings', 'autoassignrole_user_description');
+  $autoassignrole_user_description = config_get('autoassignrole.settings', 'autoassignrole_user_description');
+  if ($autoassignrole_user_description) {
+    return !empty($autoassignrole_user_description) ? $autoassignrole_user_description : $defaults;
+  }
 }
 
 /**

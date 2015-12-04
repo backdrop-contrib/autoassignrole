@@ -79,6 +79,12 @@ function autoassignrole_auto_settings() {
     );
   }
 
+  $form['actions']['#type'] = 'actions';
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save configuration'),
+  );
+
   return $form;
 }
 
@@ -232,6 +238,12 @@ function autoassignrole_user_settings() {
         ':input[name="autoassignrole_user_active"]' => array('value' => 1),
       ),
     ),
+  );
+
+  $form['actions']['#type'] = 'actions';
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save configuration'),
   );
 
   return $form;
