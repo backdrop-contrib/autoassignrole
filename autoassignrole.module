@@ -171,7 +171,6 @@ function autoassignrole_menu() {
  */
 function autoassignrole_get_active_path_rid() {
   $item = menu_get_item();
-  dpm($item);
   if ($item['page_callback'] == 'autoassignrole_register') {
     return $item['page_arguments'][0];
   }
@@ -183,7 +182,6 @@ function autoassignrole_get_active_path_rid() {
  */
 function autoassignrole_user_presave($account) {
   $config = config('autoassignrole.settings');
-  dpm($account);
   // Use case http://backdrop.org/node/971622
   // Make sure we only assign roles automatically when enabled to do so.
   if ($config->get('autoassignrole_auto_active') || $config->get("autoassignrole_user_active")
@@ -201,8 +199,6 @@ function autoassignrole_user_presave($account) {
         || ($config->get('autoassignrole_admin_active') && user_access('administer users'))) {
         $roles_to_add += array_intersect_key($user_roles, array_filter($config->get('autoassignrole_auto_roles')));
       }
-  dpm($user_roles);
-  dpm(array_filter($config->get('autoassignrole_auto_roles')));
 
       // Add in user selected roles if any.
       if ($config->get("autoassignrole_user_active") && !empty($account->user_roles)) {
@@ -223,7 +219,6 @@ function autoassignrole_user_presave($account) {
       if (!isset($account->roles)) {
         $account->roles = array();
       }
-  dpm($roles_to_add);
 
       // Add in the new roles to override the current roles.
       $account->roles = $roles_to_add + $account->roles;

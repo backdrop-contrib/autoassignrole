@@ -1,0 +1,31 @@
+[AutoassignroleAdminAutoTestCase]
+name = Admin auto
+description = Creates tests for auto assign role module.
+group = Autoassign role
+file = autoassignrole.test
+
+[AutoassignroleAdminUserTestCase]
+name = Admin user
+description = Tests the administrative setting for auto assign role user selection.
+group = Autoassign role
+file = autoassignrole.test
+
+[AutoassignroleAdminRolePerPageTestCase]
+name = Admin role per path
+description = Tests the auto assign role per path selection.
+group = Autoassign role
+file = autoassignrole.test
+
+[AutoassignroleUserCreationTestCase]
+name = User creation
+description = Tests the user creation functionality for auto assign role automatic assignment.
+group = Autoassign role
+file = autoassignrole.test
+
+
+[AutoassignroleUserCreationRolePerPathTestCase]
+name = User creation by path
+description = Tests the user creation functionality for auto assign role automatic assignment based upon a path.
+group = Autoassign role
+file = autoassignrole.test
+

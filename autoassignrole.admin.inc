@@ -90,8 +90,8 @@ function autoassignrole_auto_settings() {
 
 function autoassignrole_auto_settings_submit($form, &$form_state) {
   $config = config('autoassignrole.settings');
-  $config->set('autoassignrole_auto_active', $form_state['values']['autoassignrole_auto_active']);
-  $config->set('autoassignrole_admin_active', $form_state['values']['autoassignrole_admin_active']);
+  $config->set('autoassignrole_auto_active', (int) $form_state['values']['autoassignrole_auto_active']);
+  $config->set('autoassignrole_admin_active', (int) $form_state['values']['autoassignrole_admin_active']);
   if ($form_state['values']['roles']){
     $config->set('autoassignrole_auto_roles', $form_state['values']['autoassignrole_auto_roles']);
   }
