@@ -29,5 +29,4 @@ CURRENT MAINTAINERS
 CREDITS   
 --------------- 
 
-Ported from the Drupal module maintained by https://www.drupal.org/u/cyberswat
-https://www.drupal.org/project/autoassignrole
+Ported from the [Drupal module](https://www.drupal.org/project/autoassignrole) maintained by https://www.drupal.org/u/cyberswat
