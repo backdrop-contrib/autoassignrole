@@ -191,7 +191,7 @@ function autoassignrole_user_presave($account) {
     // Only assign roles if this is a new account.
     if (isset($account->is_new) && !empty($account->is_new)) {
       // Get the existing user roles with the exception of the anonymous role.
-      $user_roles = user_roles(TRUE);
+      $user_roles = user_roles(TRUE, NULL, TRUE);
       $roles_to_add = array();
 
       // Add in automatic roles.
@@ -221,7 +221,11 @@ function autoassignrole_user_presave($account) {
       }
 
       // Add in the new roles to override the current roles.
-      $account->roles = $roles_to_add + $account->roles;
+      $roles_2_add = array();
+      foreach ($roles_to_add as $role => $role_object) {
+        $roles_2_add[$role_object->weight] = $role;
+      }
+      $account->roles = $roles_2_add + $account->roles;
     }
   }
 }
